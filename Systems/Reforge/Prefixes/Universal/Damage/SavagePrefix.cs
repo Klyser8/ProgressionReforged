@@ -14,7 +14,6 @@ public class SavagePrefix() : DamagePrefix(3, "damage")
         ref int critBonus)
     {
         damageMult = 1.4f; // +40% damage
-        base.SetStats(ref damageMult, ref knockbackMult, ref useTimeMult, ref scaleMult, ref shootSpeedMult, ref manaMult, ref critBonus);
     }
 
     public override int GetNext()

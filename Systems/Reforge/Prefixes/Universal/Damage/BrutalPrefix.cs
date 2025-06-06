@@ -14,7 +14,6 @@ public class BrutalPrefix() : DamagePrefix(2, "damage")
         ref int critBonus)
     {
         damageMult = 1.25f; // +25% damage
-        base.SetStats(ref damageMult, ref knockbackMult, ref useTimeMult, ref scaleMult, ref shootSpeedMult, ref manaMult, ref critBonus);
     }
 
     public override int GetNext()
