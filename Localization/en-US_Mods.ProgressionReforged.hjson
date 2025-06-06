@@ -1,0 +1,21 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+Items: {
+	SomeSword: {
+		DisplayName: Some Sword
+		Tooltip:
+			'''
+			Template of an item
+			Replacing this tooltip is duty 
+			It's snowing on Mt.Fuji
+			'''
+	}
+}
+
+Prefixes: {
+	BrutalPrefix.DisplayName: Brutal Prefix
+	FiercePrefix.DisplayName: Fierce Prefix
+	SavagePrefix.DisplayName: Savage Prefix
+	TemperedPrefix.DisplayName: Tempered Prefix
+	WeakPrefix.DisplayName: Weak Prefix
+}

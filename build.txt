@@ -1,0 +1,3 @@
+displayName = Progression Reforged
+author = Klyser8
+version = 0.1

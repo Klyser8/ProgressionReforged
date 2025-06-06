@@ -1,0 +1,4 @@
+A mod which focus is to rework the progression of the game, giving purpose to more items and bosses found within Terraria. 
+To do this, the mod tweaks hundreds of items, adds new ones to fill in gaps in progression. 
+The tweaks include recipe changes, item reworks, reforge changes, and more.
+DISCLAIMER: This mod is built to be played alongside Terraria Overhaul. It can be played without it, but I cannot guarantee a balanced experience.
