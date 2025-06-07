@@ -1,10 +1,11 @@
 ﻿using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.Damage;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritChance;
 
-public class FiercePrefix() : LeveledPrefix(1, "damage")
+public class SharpPrefix() : LeveledPrefix(1, "critChance")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
+    
     public override void SetStats(
         ref float damageMult, 
         ref float knockbackMult, 
@@ -14,16 +15,16 @@ public class FiercePrefix() : LeveledPrefix(1, "damage")
         ref float manaMult, 
         ref int critBonus)
     {
-        damageMult = 1.15f; // +15% damage
+        critBonus = 5; // 5% crit chance
     }
-
+    
     public override int GetNext()
     {
-        return ModContent.PrefixType<BrutalPrefix>();
+        return ModContent.PrefixType<KeenPrefix>(); // Next prefix in the crit chance chain
     }
 
     public override int GetPrevious()
     {
-        return ModContent.PrefixType<TemperedPrefix>();
+        return ModContent.PrefixType<SteadyPrefix>();
     }
 }

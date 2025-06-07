@@ -10,23 +10,17 @@ public class VanillaPrefixTweaker : GlobalItem
 {
     public override bool AllowPrefix(Item item, int pre)
     {
-        if (pre < 0)        // -1/-2/-3 mean special roll modes
-            return true;    // keep default behavior
-
-        ModPrefix prefix = PrefixLoader.GetPrefix(pre);
-        if (prefix == null) // safety check
-            return true;
-
-        if (prefix.Mod == null)
+        // Reject vanilla prefixes
+        ModPrefix p = PrefixLoader.GetPrefix(pre);
+        if (p == null || p.Mod == null)
             return false;
 
-        if (prefix is LeveledPrefix lp)
-            return lp.GetLevel() >= -1 && lp.GetLevel() <= 1;
+        // Allow only –1, 0, +1 of the Leveled prefixes chain
+        if (p is LeveledPrefix lp)
+            return lp.GetLevel() is >= -1 and <= 3;
 
+        // Allow every other mod’s prefixes
         return true;
     }
 
-    
-    
-    
 }

@@ -13,9 +13,66 @@ Items: {
 }
 
 Prefixes: {
-	BrutalPrefix.DisplayName: Brutal Prefix
-	FiercePrefix.DisplayName: Fierce Prefix
-	SavagePrefix.DisplayName: Savage Prefix
-	TemperedPrefix.DisplayName: Tempered Prefix
-	WeakPrefix.DisplayName: Weak Prefix
+	BrutalPrefix.DisplayName: Brutal
+	FiercePrefix.DisplayName: Fierce
+	SavagePrefix.DisplayName: Savage
+	TemperedPrefix.DisplayName: Tempered
+	WeakPrefix.DisplayName: Weak
+	KeenPrefix.DisplayName: Keen
+	SharpPrefix.DisplayName: Sharp
+	SteadyPrefix.DisplayName: Steady
+	UnluckyPrefix.DisplayName: Unlucky
+	ZealousPrefix.DisplayName: Zealous
+	AboveAveragePrefix.DisplayName: Above Average
+	BigPrefix.DisplayName: Big
+	MassivePrefix.DisplayName: Massive
+	SmallPrefix.DisplayName: Small
+	TitanicPrefix.DisplayName: Titanic
+	OverwhelmingPrefix.DisplayName: Overwhelming
+	ForcefulPrefix.DisplayName: Forceful
+	FeeblePrefix.DisplayName: Feeble
+	PowerfulPrefix.DisplayName: Powerful
+	RudePrefix.DisplayName: Rude
+	BriskPrefix.DisplayName: Brisk
+	NimblePrefix.DisplayName: Nimble
+	SluggishPrefix.DisplayName: Sluggish
+	SnappyPrefix.DisplayName: Snappy
+	RecklessPrefix.DisplayName: Reckless
+	AttunedPrefix.DisplayName: Attuned
+	ControlledPrefix.DisplayName: Controlled
+	FocusedPrefix.DisplayName: Focused
+	InefficientPrefix.DisplayName: Inefficient
+	MysticPrefix.DisplayName: Mystic
+	AcceleratedPrefix.DisplayName: Accelerated
+	BlazingPrefix.DisplayName: Blazing
+	HamperedPrefix.DisplayName: Hampered
+	RefinedPrefix.DisplayName: Refined
+	SonicPrefix.DisplayName: Sonic
+
+	LethalPrefix: {
+		DisplayName: Lethal
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.LethalPrefix.AdditionalTooltip
+	}
+
+	PrecisePrefix: {
+		DisplayName: Precise
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PrecisePrefix.AdditionalTooltip
+	}
+
+	SoftHittingPrefix: {
+		DisplayName: Soft Hitting
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.SoftHittingPrefix.AdditionalTooltip
+	}
+
+	ViciousPrefix: {
+		DisplayName: Vicious
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.ViciousPrefix.AdditionalTooltip
+	}
+
+	WoundingPrefix: {
+		DisplayName: Wounding
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.WoundingPrefix.AdditionalTooltip
+	}
+
+	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
 }

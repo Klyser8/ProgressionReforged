@@ -1,10 +1,12 @@
-﻿using Terraria.ModLoader;
+﻿using ProgressionReforged.Systems.Reforge.Prefixes.Universal.Knockback;
+using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.Damage;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritChance;
 
-public class FiercePrefix() : LeveledPrefix(1, "damage")
+public class OverwhelmingPrefix() : LeveledPrefix(3, "knockback")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
+    
     public override void SetStats(
         ref float damageMult, 
         ref float knockbackMult, 
@@ -14,16 +16,16 @@ public class FiercePrefix() : LeveledPrefix(1, "damage")
         ref float manaMult, 
         ref int critBonus)
     {
-        damageMult = 1.15f; // +15% damage
+        knockbackMult *= 1.66f; // Increase knockback by 66%
     }
-
+    
     public override int GetNext()
     {
-        return ModContent.PrefixType<BrutalPrefix>();
+        return -1; // No next prefix, as this is the highest level
     }
 
     public override int GetPrevious()
     {
-        return ModContent.PrefixType<TemperedPrefix>();
+        return ModContent.PrefixType<PowerfulPrefix>();
     }
 }

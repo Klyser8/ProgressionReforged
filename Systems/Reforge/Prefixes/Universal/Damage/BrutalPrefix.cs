@@ -2,8 +2,10 @@
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.Damage;
 
-public class BrutalPrefix() : DamagePrefix(2, "damage")
+public class BrutalPrefix() : LeveledPrefix(2, "damage")
 {
+    public override PrefixCategory Category => PrefixCategory.AnyWeapon;
+
     public override void SetStats(
         ref float damageMult, 
         ref float knockbackMult, 

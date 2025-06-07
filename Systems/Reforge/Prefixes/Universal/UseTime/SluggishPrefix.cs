@@ -1,8 +1,8 @@
 ﻿using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.Damage;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.UseTime;
 
-public class FiercePrefix() : LeveledPrefix(1, "damage")
+public class SluggishPrefix() : LeveledPrefix(-1, "useTime")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
     public override void SetStats(
@@ -14,16 +14,16 @@ public class FiercePrefix() : LeveledPrefix(1, "damage")
         ref float manaMult, 
         ref int critBonus)
     {
-        damageMult = 1.15f; // +15% damage
+        useTimeMult = 1.15f; // 15% slower use time
     }
 
     public override int GetNext()
     {
-        return ModContent.PrefixType<BrutalPrefix>();
+        return ModContent.GetInstance<SnappyPrefix>().Type; // Next prefix is Snappy
     }
 
     public override int GetPrevious()
     {
-        return ModContent.PrefixType<TemperedPrefix>();
+        return -1; // No previous prefix, as this is the lowest level
     }
 }
