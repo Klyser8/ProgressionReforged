@@ -17,6 +17,14 @@ public class HamperedPrefix() : LeveledPrefix(-1, "shootSpeed")
         ref int critBonus)
     {
         shootSpeedMult = 0.85f; // 15% less shoot speed
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

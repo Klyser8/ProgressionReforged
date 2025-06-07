@@ -15,6 +15,14 @@ public class WeakPrefix() : LeveledPrefix(-1, "damage")
         ref int critBonus)
     {
         damageMult = 0.9f; // -10% damage
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

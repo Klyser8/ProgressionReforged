@@ -16,6 +16,14 @@ public class UnluckyPrefix() : LeveledPrefix(-1, "critChance")
         ref int critBonus)
     {
         critBonus = -2; // -2% crit chance
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

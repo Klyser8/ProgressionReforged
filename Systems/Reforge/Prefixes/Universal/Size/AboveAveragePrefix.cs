@@ -16,6 +16,14 @@ public class AboveAveragePrefix() : LeveledPrefix(0, "size")
         ref int critBonus)
     {
         scaleMult = 1.05f; // 5% bigger
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

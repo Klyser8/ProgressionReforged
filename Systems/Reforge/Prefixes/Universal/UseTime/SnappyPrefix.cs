@@ -15,6 +15,14 @@ public class SnappyPrefix() : LeveledPrefix(0, "useTime")
         ref int critBonus)
     {
         useTimeMult = 0.95f; // 5% faster use time
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

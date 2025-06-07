@@ -15,6 +15,14 @@ public class FiercePrefix() : LeveledPrefix(1, "damage")
         ref int critBonus)
     {
         damageMult = 1.15f; // +15% damage
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

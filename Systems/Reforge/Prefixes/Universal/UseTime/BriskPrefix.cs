@@ -14,7 +14,15 @@ public class BriskPrefix() : LeveledPrefix(1, "useTime")
         ref float manaMult, 
         ref int critBonus)
     {
-        useTimeMult = 0.85f; // 15% faster use time
+        useTimeMult = 0.89f; // 11% faster use time
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

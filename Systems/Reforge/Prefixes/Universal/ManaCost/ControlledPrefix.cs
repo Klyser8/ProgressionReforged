@@ -17,6 +17,14 @@ public class ControlledPrefix() : LeveledPrefix(0, "manaCost")
         ref int critBonus)
     {
         manaMult = 0.95f; // 11% less mana cost
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

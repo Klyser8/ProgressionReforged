@@ -14,7 +14,15 @@ public class RecklessPrefix() : LeveledPrefix(3, "useTime")
         ref float manaMult, 
         ref int critBonus)
     {
-        useTimeMult = 0.5f; // 50% faster use time
+        useTimeMult = 0.75f; // 25% faster use time
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

@@ -16,6 +16,14 @@ public class SmallPrefix() : LeveledPrefix(-1, "size")
         ref int critBonus)
     {
         scaleMult = 0.85f; // 15% smaller
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

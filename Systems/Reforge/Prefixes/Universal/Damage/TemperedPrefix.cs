@@ -15,6 +15,14 @@ public class TemperedPrefix() : LeveledPrefix(0, "damage")
         ref int critBonus)
     {
         damageMult = 1.05f; // +5% damage
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()

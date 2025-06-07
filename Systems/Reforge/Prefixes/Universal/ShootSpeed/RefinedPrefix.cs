@@ -17,6 +17,14 @@ public class RefinedPrefix() : LeveledPrefix(0, "shootSpeed")
         ref int critBonus)
     {
         shootSpeedMult = 1.10f; // 10% faster shoot speed
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

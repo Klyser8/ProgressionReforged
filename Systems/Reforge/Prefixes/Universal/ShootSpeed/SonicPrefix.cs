@@ -17,6 +17,14 @@ public class SonicPrefix() : LeveledPrefix(2, "shootSpeed")
         ref int critBonus)
     {
         shootSpeedMult = 1.60f; // 60% faster shoot speed
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

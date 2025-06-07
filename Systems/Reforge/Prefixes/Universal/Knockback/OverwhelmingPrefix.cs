@@ -17,6 +17,14 @@ public class OverwhelmingPrefix() : LeveledPrefix(3, "knockback")
         ref int critBonus)
     {
         knockbackMult *= 1.66f; // Increase knockback by 66%
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

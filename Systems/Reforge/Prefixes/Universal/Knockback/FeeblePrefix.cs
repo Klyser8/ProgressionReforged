@@ -16,6 +16,14 @@ public class FeeblePrefix() : LeveledPrefix(-1, "knockback")
         ref int critBonus)
     {
         knockbackMult *= 0.8f; // Reduce knockback by 20%
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

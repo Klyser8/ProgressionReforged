@@ -17,6 +17,14 @@ public class InefficientPrefix() : LeveledPrefix(-1, "manaCost")
         ref int critBonus)
     {
         manaMult = 1.13f; // 13% more mana cost
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

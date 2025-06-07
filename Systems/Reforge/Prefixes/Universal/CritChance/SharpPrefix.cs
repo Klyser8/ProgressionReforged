@@ -16,6 +16,14 @@ public class SharpPrefix() : LeveledPrefix(1, "critChance")
         ref int critBonus)
     {
         critBonus = 5; // 5% crit chance
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
     
     public override int GetNext()

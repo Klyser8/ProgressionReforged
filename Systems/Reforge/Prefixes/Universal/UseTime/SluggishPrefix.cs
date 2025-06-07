@@ -15,6 +15,14 @@ public class SluggishPrefix() : LeveledPrefix(-1, "useTime")
         ref int critBonus)
     {
         useTimeMult = 1.15f; // 15% slower use time
+        base.SetStats(
+            ref damageMult, 
+            ref knockbackMult, 
+            ref useTimeMult, 
+            ref scaleMult, 
+            ref shootSpeedMult, 
+            ref manaMult, 
+            ref critBonus);
     }
 
     public override int GetNext()
