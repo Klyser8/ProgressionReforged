@@ -1,6 +1,7 @@
-﻿using Terraria.ModLoader;
+﻿using ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritChance;
+using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritChance;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.Size;
 
 public class TitanicPrefix() : LeveledPrefix(3, "size")
 {

@@ -21,7 +21,7 @@ public class HeavyWorkBenchGlobalTile : GlobalTile
             Player player = Main.LocalPlayer;
             player.noThrow = 2;
             player.cursorItemIconEnabled = true;
-            player.cursorItemIconID = ItemID.None;
+            player.cursorItemIconID = ItemID.HeavyWorkBench;
         }
     }
 }

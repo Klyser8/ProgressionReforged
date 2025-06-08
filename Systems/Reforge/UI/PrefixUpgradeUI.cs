@@ -29,7 +29,7 @@ internal class PrefixUpgradeUI : UIState
         {
             Left = { Pixels = 50 },
             Top = { Pixels = 270 },
-            ValidItemFunc = item => item.IsAir || (!item.IsAir && item.prefix > 0)
+            ValidItemFunc = _ => true
         };
         Append(_itemSlot);
         
@@ -73,46 +73,55 @@ internal class PrefixUpgradeUI : UIState
         }
 
         int price = PrefixUpgradePrice(_itemSlot.Item, leveled);
-        string costText = Language.GetTextValue("LegacyInterface.46") + ": ";
-        int[] coins = Utils.CoinsSplit(price);
-        var coinsText = new StringBuilder();
-        string[] coinKeys =
+        bool atMax = leveled.GetNext() == -1;
+        if (atMax)
         {
-            "LegacyInterface.18",
-            "LegacyInterface.17",
-            "LegacyInterface.16",
-            "LegacyInterface.15"
-        };
-        Color[] coinColors =
-        {
-            Colors.CoinCopper,
-            Colors.CoinSilver,
-            Colors.CoinGold,
-            Colors.CoinPlatinum
-        };
-        for (int i = 3; i >= 0; i--)
-        {
-            if (coins[i] <= 0)
-                continue;
-            if (coinsText.Length > 0)
-                coinsText.Append(" ");
-            coinsText.Append($"[c/{coinColors[i].Hex3()}:{coins[i]} {Language.GetTextValue(coinKeys[i])}]");
+            const string message = "Prefix has reached max level!";
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY), Color.Yellow, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
         }
+        else
+        {
+            string costText = Language.GetTextValue("LegacyInterface.46") + ": ";
+            int[] coins = Utils.CoinsSplit(price);
+            var coinsText = new StringBuilder();
+            string[] coinKeys =
+            {
+                "LegacyInterface.18",
+                "LegacyInterface.17",
+                "LegacyInterface.16",
+                "LegacyInterface.15"
+            };
+            Color[] coinColors =
+            {
+                Colors.CoinCopper,
+                Colors.CoinSilver,
+                Colors.CoinGold,
+                Colors.CoinPlatinum
+            };
+            for (int i = 3; i >= 0; i--)
+            {
+                if (coins[i] <= 0)
+                    continue;
+                if (coinsText.Length > 0)
+                    coinsText.Append(" ");
+                coinsText.Append($"[c/{coinColors[i].Hex3()}:{coins[i]} {Language.GetTextValue(coinKeys[i])}]");
+            }
 
-        ItemSlot.DrawSavings(spriteBatch, SlotX + 130, Main.instance.invBottom, true);
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, costText, new Vector2(SlotX + 50, SlotY),
-            new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
-        ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, coinsText.ToString(), new Vector2(SlotX + 50 + FontAssets.MouseText.Value.MeasureString(costText).X, SlotY),
-            Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+            ItemSlot.DrawSavings(spriteBatch, SlotX + 130, Main.instance.invBottom, true);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, costText, new Vector2(SlotX + 50, SlotY),
+                new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, coinsText.ToString(), new Vector2(SlotX + 50 + FontAssets.MouseText.Value.MeasureString(costText).X, SlotY),
+                Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+        }
 
         int buttonX = SlotX + 70;
         int buttonY = SlotY + 40;
         bool hovering = Main.mouseX > buttonX - 15 && Main.mouseX < buttonX + 15 && Main.mouseY > buttonY - 15 && Main.mouseY < buttonY + 15 && !PlayerInput.IgnoreMouseInterface;
-        bool canUpgrade = leveled.GetNext() != -1 && Main.LocalPlayer.CanAfford(price);
-        Texture2D texture = _upgradeButtonTexture[hovering ? 1 : 0].Value;
+        bool canUpgrade = !atMax && Main.LocalPlayer.CanAfford(price);
+        Texture2D texture = _upgradeButtonTexture[canUpgrade ? (hovering ? 1 : 0) : 2].Value;
         Color drawColor = canUpgrade ? Color.White : Color.White * 0.5f;
 
-        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, drawColor, 0f, texture.Size() / 2f, 1.5f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, drawColor, 0f, texture.Size() / 2f, 1.0f, SpriteEffects.None, 0f);
         
         if (!hovering || !canUpgrade)
         {
@@ -120,7 +129,7 @@ internal class PrefixUpgradeUI : UIState
             return;
         }
         
-        Main.hoverItemName = Language.GetTextValue("LegacyInterface.19");
+        Main.hoverItemName = Language.GetTextValue("Upgrade to level {0}", leveled.GetNext());
         if (!_tickPlayed)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
@@ -136,6 +145,7 @@ internal class PrefixUpgradeUI : UIState
         int stack = _itemSlot.Item.stack;
 
         Item newItem = _itemSlot.Item.Clone();
+        newItem.SetDefaults(newItem.type);
         newItem.Prefix(leveled.GetNext());
 
         _itemSlot.Item = newItem;

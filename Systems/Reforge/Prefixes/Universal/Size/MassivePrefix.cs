@@ -1,4 +1,5 @@
-﻿using Terraria.ModLoader;
+﻿using ProgressionReforged.Systems.Reforge.Prefixes.Universal.Size;
+using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritChance;
 

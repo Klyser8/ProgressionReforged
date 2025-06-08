@@ -17,7 +17,7 @@ public class VanillaPrefixTweaker : GlobalItem
 
         // Allow only –1, 0, +1 of the Leveled prefixes chain
         if (p is LeveledPrefix lp)
-            return lp.GetLevel() is >= -1 and <= 3;
+            return lp.GetLevel() is >= -1 and <= 1;
 
         // Allow every other mod’s prefixes
         return true;
