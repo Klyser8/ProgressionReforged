@@ -35,6 +35,7 @@ internal class PrefixUpgradeSystem : ModSystem
     {
         if (UpgradeInterface != null)
         {
+            CloseOtherInterfaces();
             _benchPos = new Point16(i, j);
             Main.playerInventory = true;
             UpgradeInterface.SetState(UpgradeUI);
@@ -72,6 +73,20 @@ internal class PrefixUpgradeSystem : ModSystem
         Player player = Main.LocalPlayer;
         return player.chest != -1 || player.talkNPC != -1 || player.sign != -1 ||
                Main.npcShop > 0 || Main.editChest || Main.editSign;
+    }
+    
+    private static void CloseOtherInterfaces()
+    {
+        Player player = Main.LocalPlayer;
+        player.chest = -1;
+        if (player.talkNPC != -1)
+            player.SetTalkNPC(-1);
+        if (player.sign != -1)
+            player.CloseSign();
+        if (Main.npcShop > 0)
+            Main.SetNPCShopIndex(0);
+        Main.editChest = false;
+        Main.editSign = false;
     }
     
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

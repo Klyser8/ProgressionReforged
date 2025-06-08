@@ -82,4 +82,14 @@ PrefixUpgrade: {
 	NoUpgradablePrefix: Item has no upgradable prefix
 	MaxLevel: Prefix has reached max level!
 	UpgradeHover: Upgrade to level {0}
+	StatHeader: Upgrade changes:
+	StatsHeader: Upgrade Preview
+	DamageLine: Damage {0:+0;-0}% -> {1:+0;-0}%
+	UseSpeedLine: Use Speed {0:+0;-0}% -> {1:+0;-0}%
+	ShootSpeedLine: Shoot Speed {0:+0;-0}% -> {1:+0;-0}%
+	SizeLine: Size {0:+0;-0}% -> {1:+0;-0}%
+	KnockbackLine: Knockback {0:+0;-0}% -> {1:+0;-0}%
+	ManaCostLine: Mana Cost {0:+0;-0}% -> {1:+0;-0}%
+	CritChanceLine: Crit Chance {0:+0;-0}% -> {1:+0;-0}%
+	CritDamageLine: Crit Damage {0:+0;-0}% -> {1:+0;-0}%
 }

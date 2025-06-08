@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -22,6 +23,8 @@ internal class PrefixUpgradeUI : UIState
     private bool _tickPlayed;
     
     private static Asset<Texture2D>[] _upgradeButtonTexture;
+
+    internal VanillaItemSlotWrapper ItemSlotWrapper => _itemSlot;
 
     public override void OnInitialize()
     {
@@ -47,6 +50,16 @@ internal class PrefixUpgradeUI : UIState
             Main.LocalPlayer.QuickSpawnItem(Entity.GetSource_NaturalSpawn(),_itemSlot.Item);
             _itemSlot.Item.TurnToAir();
         }
+    }
+    
+    
+    internal bool SwapItem(ref Item item)
+    {
+        if (_itemSlot.ValidItemFunc != null && !_itemSlot.ValidItemFunc(item))
+            return false;
+
+        Utils.Swap(ref _itemSlot.Item, ref item);
+        return true;
     }
 
     protected override void DrawSelf(SpriteBatch spriteBatch)
@@ -74,6 +87,7 @@ internal class PrefixUpgradeUI : UIState
 
         int price = PrefixUpgradePrice(_itemSlot.Item, leveled);
         bool atMax = leveled.GetNext() == -1;
+        int extraOffset = 0;
         if (atMax)
         {
             string message = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.MaxLevel");
@@ -89,7 +103,7 @@ internal class PrefixUpgradeUI : UIState
                 "LegacyInterface.18",
                 "LegacyInterface.17",
                 "LegacyInterface.16",
-                "LegacyInterface.15"
+                                "LegacyInterface.15"
             };
             Color[] coinColors =
             {
@@ -112,6 +126,13 @@ internal class PrefixUpgradeUI : UIState
                 new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, coinsText.ToString(), new Vector2(SlotX + 50 + FontAssets.MouseText.Value.MeasureString(costText).X, SlotY),
                 Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+        }
+
+        float statY = SlotY + 100;
+        foreach (string line in GetUpgradeLines(leveled))
+        {
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, new Vector2(SlotX + 50, statY), Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+            statY += 20;
         }
 
         int buttonX = SlotX + 70;
@@ -158,6 +179,46 @@ internal class PrefixUpgradeUI : UIState
         SoundEngine.PlaySound(SoundID.Item53);
         SoundEngine.PlaySound(SoundID.Item129); // 35, 
     }
+    
+    
+    private static IEnumerable<string> GetUpgradeLines(LeveledPrefix current)
+    {
+        var lines = new List<string>();
+
+        int nextType = current.GetNext();
+        if (nextType == -1)
+            return lines;
+
+        if (PrefixLoader.GetPrefix(nextType) is not LeveledPrefix next)
+            return lines;
+
+        lines.Add($"[c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.StatsHeader")}]");
+
+        void Add(string key, float cur, float nxt, bool inverse = false)
+        {
+            int curP = (int)MathF.Round((inverse ? 1f / cur - 1f : cur - 1f) * 100f);
+            int nxtP = (int)MathF.Round((inverse ? 1f / nxt - 1f : nxt - 1f) * 100f);
+            if (curP == nxtP)
+                return;
+
+            Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
+            Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
+            string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}");
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtP:+0;-0}%]");
+        }
+
+        Add("Damage", current.DamageMult, next.DamageMult);
+        Add("UseSpeed", current.UseTimeMult, next.UseTimeMult, true);
+        Add("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
+        Add("Size", current.ScaleMult, next.ScaleMult);
+        Add("Knockback", current.KnockbackMult, next.KnockbackMult);
+        Add("ManaCost", current.ManaMult, next.ManaMult, true);
+        Add("CritChance", 1f + current.CritBonus / 100f, 1f + next.CritBonus / 100f);
+        Add("CritDamage", current.CritDamageMultInternal, next.CritDamageMultInternal);
+
+        return lines;
+    }
+
 
     private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled)
     {

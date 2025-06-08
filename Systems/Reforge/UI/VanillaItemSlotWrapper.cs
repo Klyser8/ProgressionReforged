@@ -39,6 +39,11 @@ internal class VanillaItemSlotWrapper : UIElement
 		if (ContainsPoint(Main.MouseScreen) && !PlayerInput.IgnoreMouseInterface) {
 			Main.LocalPlayer.mouseInterface = true;
 			if (ValidItemFunc == null || ValidItemFunc(Main.mouseItem)) {
+				if (ItemSlot.ShiftInUse && Item.IsAir)
+				{
+					ItemSlot.OverrideHover(ref Main.mouseItem, _context);
+				}
+
 				// Handle handles all the click and hover actions based on the context.
 				ItemSlot.Handle(ref Item, _context);
 			}
