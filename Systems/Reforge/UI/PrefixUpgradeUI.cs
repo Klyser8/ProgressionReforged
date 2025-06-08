@@ -109,10 +109,10 @@ internal class PrefixUpgradeUI : UIState
         int buttonY = SlotY + 40;
         bool hovering = Main.mouseX > buttonX - 15 && Main.mouseX < buttonX + 15 && Main.mouseY > buttonY - 15 && Main.mouseY < buttonY + 15 && !PlayerInput.IgnoreMouseInterface;
         bool canUpgrade = leveled.GetNext() != -1 && Main.LocalPlayer.CanAfford(price);
-        Texture2D texture = TextureAssets.Reforge[hovering ? 1 : 0].Value;
+        Texture2D texture = _upgradeButtonTexture[hovering ? 1 : 0].Value;
         Color drawColor = canUpgrade ? Color.White : Color.White * 0.5f;
 
-        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, drawColor, 0f, texture.Size() / 2f, 0.8f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, drawColor, 0f, texture.Size() / 2f, 1.5f, SpriteEffects.None, 0f);
         
         if (!hovering || !canUpgrade)
         {
