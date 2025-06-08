@@ -12,6 +12,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using ProgressionReforged.Systems.Reforge.Prefixes;
+using ReLogic.Content;
 
 namespace ProgressionReforged.Systems.Reforge.UI;
 
@@ -19,6 +20,8 @@ internal class PrefixUpgradeUI : UIState
 {
     private VanillaItemSlotWrapper _itemSlot;
     private bool _tickPlayed;
+    
+    private static Asset<Texture2D>[] _upgradeButtonTexture;
 
     public override void OnInitialize()
     {
@@ -29,6 +32,12 @@ internal class PrefixUpgradeUI : UIState
             ValidItemFunc = item => item.IsAir || (!item.IsAir && item.prefix > 0)
         };
         Append(_itemSlot);
+        
+        _upgradeButtonTexture = new[]{
+            ModContent.Request<Texture2D>("ProgressionReforged/Content/UI/ReforgeUpgradeButton", AssetRequestMode.ImmediateLoad),
+            ModContent.Request<Texture2D>("ProgressionReforged/Content/UI/ReforgeUpgradeButtonHovered", AssetRequestMode.ImmediateLoad),
+            ModContent.Request<Texture2D>("ProgressionReforged/Content/UI/ReforgeUpgradeButtonDisabled", AssetRequestMode.ImmediateLoad)
+        };
     }
 
     public override void OnDeactivate()
@@ -83,9 +92,9 @@ internal class PrefixUpgradeUI : UIState
         int buttonY = SlotY + 40;
         bool hovering = Main.mouseX > buttonX - 15 && Main.mouseX < buttonX + 15 && Main.mouseY > buttonY - 15 && Main.mouseY < buttonY + 15 && !PlayerInput.IgnoreMouseInterface;
         bool canUpgrade = leveled.GetNext() != -1 && Main.LocalPlayer.CanAfford(price, -1);
-        Texture2D texture = TextureAssets.Reforge[canUpgrade ? (hovering ? 1 : 0) : 2].Value;
+        Texture2D texture = _upgradeButtonTexture[canUpgrade ? (hovering ? 1 : 0) : 2].Value;
 
-        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, Color.White, 0f, texture.Size() / 2f, 0.8f, SpriteEffects.None, 0f);
+        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, Color.White, 0f, texture.Size() / 2f, 2.0f, SpriteEffects.None, 0f);
 
         if (!hovering || !canUpgrade)
         {

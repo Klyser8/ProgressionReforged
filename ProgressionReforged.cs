@@ -1,3 +1,5 @@
+using Microsoft.Xna.Framework.Graphics;
+using Terraria.GameContent;
 using Terraria.ModLoader;
 
 namespace ProgressionReforged;
@@ -8,5 +10,11 @@ public class ProgressionReforged : Mod
     public static ProgressionReforged Instance()
     {
         return ModContent.GetInstance<ProgressionReforged>();
+    }
+
+    public override void Load()
+    {
+        TextureAssets.Reforge[0] = ModContent.Request<Texture2D>("ProgressionReforged/Content/UI/ReforgeRerollButton");
+        TextureAssets.Reforge[1] = ModContent.Request<Texture2D>("ProgressionReforged/Content/UI/ReforgeRerollButtonHovered");
     }
 }
