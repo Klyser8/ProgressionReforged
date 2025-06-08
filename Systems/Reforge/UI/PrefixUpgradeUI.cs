@@ -44,8 +44,7 @@ internal class PrefixUpgradeUI : UIState
     {
         if (!_itemSlot.Item.IsAir)
         {
-            Main.LocalPlayer.QuickSpawnItem(
-                Entity.GetSource_NaturalSpawn(),_itemSlot.Item);
+            Main.LocalPlayer.QuickSpawnItem(Entity.GetSource_NaturalSpawn(),_itemSlot.Item);
             _itemSlot.Item.TurnToAir();
         }
     }
@@ -60,7 +59,7 @@ internal class PrefixUpgradeUI : UIState
 
         if (_itemSlot.Item.IsAir)
         {
-            const string message = "Place an item here";
+            const string message = "Place an item to upgrade here";
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY),
                 new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             return;
@@ -77,9 +76,27 @@ internal class PrefixUpgradeUI : UIState
         string costText = Language.GetTextValue("LegacyInterface.46") + ": ";
         int[] coins = Utils.CoinsSplit(price);
         var coinsText = new StringBuilder();
-        for (int i = 0; i < 4; i++)
+        string[] coinKeys =
         {
-            coinsText.Append($"[c/{Colors.AlphaDarken(Colors.CoinPlatinum).Hex3()}:{coins[3 - i]} {Language.GetTextValue($"LegacyInterface.{15 + i}")}]");
+            "LegacyInterface.18",
+            "LegacyInterface.17",
+            "LegacyInterface.16",
+            "LegacyInterface.15"
+        };
+        Color[] coinColors =
+        {
+            Colors.CoinCopper,
+            Colors.CoinSilver,
+            Colors.CoinGold,
+            Colors.CoinPlatinum
+        };
+        for (int i = 3; i >= 0; i--)
+        {
+            if (coins[i] <= 0)
+                continue;
+            if (coinsText.Length > 0)
+                coinsText.Append(" ");
+            coinsText.Append($"[c/{coinColors[i].Hex3()}:{coins[i]} {Language.GetTextValue(coinKeys[i])}]");
         }
 
         ItemSlot.DrawSavings(spriteBatch, SlotX + 130, Main.instance.invBottom, true);
@@ -91,17 +108,18 @@ internal class PrefixUpgradeUI : UIState
         int buttonX = SlotX + 70;
         int buttonY = SlotY + 40;
         bool hovering = Main.mouseX > buttonX - 15 && Main.mouseX < buttonX + 15 && Main.mouseY > buttonY - 15 && Main.mouseY < buttonY + 15 && !PlayerInput.IgnoreMouseInterface;
-        bool canUpgrade = leveled.GetNext() != -1 && Main.LocalPlayer.CanAfford(price, -1);
-        Texture2D texture = _upgradeButtonTexture[canUpgrade ? (hovering ? 1 : 0) : 2].Value;
+        bool canUpgrade = leveled.GetNext() != -1 && Main.LocalPlayer.CanAfford(price);
+        Texture2D texture = TextureAssets.Reforge[hovering ? 1 : 0].Value;
+        Color drawColor = canUpgrade ? Color.White : Color.White * 0.5f;
 
-        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, Color.White, 0f, texture.Size() / 2f, 2.0f, SpriteEffects.None, 0f);
-
+        spriteBatch.Draw(texture, new Vector2(buttonX, buttonY), null, drawColor, 0f, texture.Size() / 2f, 0.8f, SpriteEffects.None, 0f);
+        
         if (!hovering || !canUpgrade)
         {
             _tickPlayed = false;
             return;
         }
-
+        
         Main.hoverItemName = Language.GetTextValue("LegacyInterface.19");
         if (!_tickPlayed)
         {
@@ -113,7 +131,7 @@ internal class PrefixUpgradeUI : UIState
         if (!Main.mouseLeftRelease || !Main.mouseLeft || !ItemLoader.CanReforge(_itemSlot.Item))
             return;
 
-        Main.LocalPlayer.BuyItem(price, -1);
+        Main.LocalPlayer.BuyItem(price);
         bool fav = _itemSlot.Item.favorited;
         int stack = _itemSlot.Item.stack;
 

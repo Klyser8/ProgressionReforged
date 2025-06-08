@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using ProgressionReforged.Systems.Reforge.UI;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -12,6 +13,7 @@ internal class PrefixUpgradeSystem : ModSystem
     internal UserInterface UpgradeInterface;
     internal PrefixUpgradeUI UpgradeUI;
     internal static PrefixUpgradeSystem Instance;
+    private Point16 _benchPos;
 
     public override void Load()
     {
@@ -29,10 +31,11 @@ internal class PrefixUpgradeSystem : ModSystem
         Instance = null;
     }
 
-    public void Show()
+    public void Show(int i, int j)
     {
         if (UpgradeInterface != null)
         {
+            _benchPos = new Point16(i, j);
             Main.playerInventory = true;
             UpgradeInterface.SetState(UpgradeUI);
         }
@@ -47,8 +50,20 @@ internal class PrefixUpgradeSystem : ModSystem
     {
         if (UpgradeInterface?.CurrentState != null)
         {
+            if (!Main.playerInventory || !PlayerIsNearBench())
+            {
+                Hide();
+                return;
+            }
+
             UpgradeInterface.Update(gameTime);
         }
+    }
+    
+    private bool PlayerIsNearBench()
+    {
+        Vector2 playerPos = Main.LocalPlayer.Center / 16f;
+        return Vector2.Distance(playerPos, _benchPos.ToVector2()) <= 6f;
     }
 
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)

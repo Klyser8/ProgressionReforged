@@ -10,7 +10,7 @@ public class HeavyWorkBenchGlobalTile : GlobalTile
     {
         if (type == TileID.HeavyWorkBench)
         {
-            PrefixUpgradeSystem.Instance?.Show();
+            PrefixUpgradeSystem.Instance?.Show(i, j);
         }
     }
     
