@@ -59,7 +59,7 @@ internal class PrefixUpgradeUI : UIState
 
         if (_itemSlot.Item.IsAir)
         {
-            const string message = "Place an item to upgrade here";
+            string message = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.PlaceItem");
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY),
                 new Color(Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor, Main.mouseTextColor), 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             return;
@@ -67,7 +67,7 @@ internal class PrefixUpgradeUI : UIState
 
         if (PrefixLoader.GetPrefix(_itemSlot.Item.prefix) is not LeveledPrefix leveled)
         {
-            const string message = "Item has no upgradable prefix";
+            string message = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.NoUpgradablePrefix");
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY), Color.Red, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             return;
         }
@@ -76,7 +76,7 @@ internal class PrefixUpgradeUI : UIState
         bool atMax = leveled.GetNext() == -1;
         if (atMax)
         {
-            const string message = "Prefix has reached max level!";
+            string message = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.MaxLevel");
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY), Color.Yellow, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
         }
         else
@@ -129,7 +129,7 @@ internal class PrefixUpgradeUI : UIState
             return;
         }
         
-        Main.hoverItemName = Language.GetTextValue("Upgrade to level {0}", leveled.GetNext());
+        Main.hoverItemName = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.UpgradeHover", leveled.GetNext());
         if (!_tickPlayed)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);

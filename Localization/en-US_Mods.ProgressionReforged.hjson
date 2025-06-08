@@ -75,4 +75,10 @@ Prefixes: {
 	}
 
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
+	PrefixUpgrade: {
+		PlaceItem: "Place an item to upgrade here"
+		NoUpgradablePrefix: "Item has no upgradable prefix"
+		MaxLevel: "Prefix has reached max level!"
+		UpgradeHover: "Upgrade to level {0}"
+	}
 }
