@@ -8,6 +8,9 @@ namespace ProgressionReforged.Systems.Reforge;
 
 public class VanillaPrefixTweaker : GlobalItem
 {
+    
+    // This is used to bypass the leveled prefix level check, allowing all leveled prefixes to be applied
+    internal static bool BypassLevelCheck;
     public override bool AllowPrefix(Item item, int pre)
     {
         // Reject vanilla prefixes
@@ -16,10 +19,10 @@ public class VanillaPrefixTweaker : GlobalItem
             return false;
 
         // Allow only –1, 0, +1 of the Leveled prefixes chain
-        if (p is LeveledPrefix lp)
+        if (!BypassLevelCheck && p is LeveledPrefix lp)
             return lp.GetLevel() is >= -1 and <= 1;
 
-        // Allow every other mod’s prefixes
+        // Allow all modded prefixes otherwise
         return true;
     }
 

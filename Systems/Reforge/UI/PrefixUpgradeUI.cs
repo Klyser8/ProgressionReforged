@@ -129,7 +129,7 @@ internal class PrefixUpgradeUI : UIState
             return;
         }
         
-        Main.hoverItemName = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.UpgradeHover", leveled.GetNext());
+        Main.hoverItemName = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.UpgradeHover", leveled.GetLevel());
         if (!_tickPlayed)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
@@ -146,15 +146,17 @@ internal class PrefixUpgradeUI : UIState
 
         Item newItem = _itemSlot.Item.Clone();
         newItem.SetDefaults(newItem.type);
+        VanillaPrefixTweaker.BypassLevelCheck = true;
         newItem.Prefix(leveled.GetNext());
-
+        VanillaPrefixTweaker.BypassLevelCheck = false;
         _itemSlot.Item = newItem;
         _itemSlot.Item.position = Main.LocalPlayer.Center;
         _itemSlot.Item.favorited = fav;
         _itemSlot.Item.stack = stack;
 
         ItemLoader.PostReforge(_itemSlot.Item);
-        SoundEngine.PlaySound(SoundID.Item37);
+        SoundEngine.PlaySound(SoundID.Item53);
+        SoundEngine.PlaySound(SoundID.Item129); // 35, 
     }
 
     private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled)

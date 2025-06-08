@@ -50,7 +50,7 @@ internal class PrefixUpgradeSystem : ModSystem
     {
         if (UpgradeInterface?.CurrentState != null)
         {
-            if (!Main.playerInventory || !PlayerIsNearBench())
+            if (!Main.playerInventory || !PlayerIsNearBench() || AnotherInterfaceOpen())
             {
                 Hide();
                 return;
@@ -66,6 +66,14 @@ internal class PrefixUpgradeSystem : ModSystem
         return Vector2.Distance(playerPos, _benchPos.ToVector2()) <= 6f;
     }
 
+    
+    private static bool AnotherInterfaceOpen()
+    {
+        Player player = Main.LocalPlayer;
+        return player.chest != -1 || player.talkNPC != -1 || player.sign != -1 ||
+               Main.npcShop > 0 || Main.editChest || Main.editSign;
+    }
+    
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
