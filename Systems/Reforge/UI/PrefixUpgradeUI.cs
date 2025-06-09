@@ -152,7 +152,7 @@ internal class PrefixUpgradeUI : UIState
             return;
         }
         
-        Main.hoverItemName = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.UpgradeHover", leveled.GetLevel());
+        Main.hoverItemName = Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.UpgradeHover", leveled.GetLevel() + 1);
         if (!_tickPlayed)
         {
             SoundEngine.PlaySound(SoundID.MenuTick);
@@ -208,16 +208,23 @@ internal class PrefixUpgradeUI : UIState
 
         void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false)
         {
+            int curP;
+            int nxtP;
             if (baseVal == 0f)
-                return;
-
-            int curP = (int)MathF.Round((inverse ? baseVal / curVal - 1f : curVal / baseVal - 1f) * 100f);
-            int nxtP = (int)MathF.Round((inverse ? baseVal / nxtVal - 1f : nxtVal / baseVal - 1f) * 100f);
+            {
+                curP = (int)MathF.Round(curVal - baseVal);
+                nxtP = (int)MathF.Round(nxtVal - baseVal);
+            }
+            else
+            {
+                curP = (int)MathF.Round((inverse ? baseVal / curVal - 1f : curVal / baseVal - 1f) * 100f);
+                nxtP = (int)MathF.Round((inverse ? baseVal / nxtVal - 1f : nxtVal / baseVal - 1f) * 100f);
+            }
             if (curP == nxtP)
                 return;
 
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
-            Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
+            Color c2 = nxtP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
             lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
         }
@@ -231,17 +238,17 @@ internal class PrefixUpgradeUI : UIState
                 return;
 
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
-            Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
+            Color c2 = nxtP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
             lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
         }
 
-        AddItem("Damage", baseItem.damage, item.damage, nextItem.damage);
-        AddItem("UseSpeed", baseItem.useTime, item.useTime, nextItem.useTime, true);
-        AddItem("ShootSpeed", baseItem.shootSpeed, item.shootSpeed, nextItem.shootSpeed);
-        AddItem("Size", baseItem.scale, item.scale, nextItem.scale);
-        AddItem("Knockback", baseItem.knockBack, item.knockBack, nextItem.knockBack);
-        AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
+        AddPrefixStat("Damage", current.DamageMult, next.DamageMult);
+        AddPrefixStat("UseSpeed", current.UseTimeMult, next.UseTimeMult, true);
+        AddPrefixStat("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
+        AddPrefixStat("Size", current.ScaleMult, next.ScaleMult);
+        AddPrefixStat("Knockback", current.KnockbackMult, next.KnockbackMult);
+        AddPrefixStat("ManaCost", current.ManaMult, next.ManaMult, true);
         AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit);
         
         float curCritDmg = 1f;
@@ -253,13 +260,18 @@ internal class PrefixUpgradeUI : UIState
             nxtCritDmg = nxtProvider.CritDamageMult;
 
         AddPrefixStat("CritDamage", curCritDmg, nxtCritDmg);
-
+        
+        //TODO 1. quitting the game makes the item in the upgrade slot disappear
+        //TODO 2. Weak prefix into tempered prefix makes the reforge disappear, due to it being rounded down to 0% instead of 5%. ONLY ON WEAPONS WITH LOW DMG
+        //TODO 3. The use time string does not calculate the multipliers correctly.
+        
         return lines;
     }
     
     private static int GetNextUsefulPrefix(Item item, LeveledPrefix prefix)
     {
         int nextType = prefix.GetNext();
+        int firstCandidate = nextType;
         while (nextType != -1)
         {
             Item tmp = new();
@@ -279,7 +291,7 @@ internal class PrefixUpgradeUI : UIState
                 break;
             nextType = nextPrefix.GetNext();
         }
-        return nextType;
+        return nextType == -1 ? firstCandidate : nextType;
     }
 
     private static float GetCritDamage(int prefix)
