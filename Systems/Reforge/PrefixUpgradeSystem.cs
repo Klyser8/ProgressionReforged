@@ -33,7 +33,10 @@ internal class PrefixUpgradeSystem : ModSystem
     
     public override void PreSaveAndQuit()
     {
-        if (UpgradeInterface?.CurrentState is PrefixUpgradeUI ui && !ui.ItemSlotWrapper.Item.IsAir)
+        PrefixUpgradeUI ui = UpgradeInterface?.CurrentState as PrefixUpgradeUI ?? UpgradeUI;
+        
+        ProgressionReforged.Instance().Logger.Debug($"Saving item: {ui?.ItemSlotWrapper.Item.Name} (IsAir: {ui?.ItemSlotWrapper.Item.IsAir})");
+        if (ui != null && !ui.ItemSlotWrapper.Item.IsAir)
         {
             Player player = Main.LocalPlayer;
             player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), ui.ItemSlotWrapper.Item);
