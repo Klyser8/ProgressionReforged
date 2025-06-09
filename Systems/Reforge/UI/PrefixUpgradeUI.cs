@@ -215,10 +215,15 @@ internal class PrefixUpgradeUI : UIState
                 curP = (int)MathF.Round(curVal - baseVal);
                 nxtP = (int)MathF.Round(nxtVal - baseVal);
             }
+            else if (inverse)
+            {
+                curP = (int)MathF.Round((baseVal - curVal) / baseVal * 100f);
+                nxtP = (int)MathF.Round((baseVal - nxtVal) / baseVal * 100f);
+            }
             else
             {
-                curP = (int)MathF.Round((inverse ? baseVal / curVal - 1f : curVal / baseVal - 1f) * 100f);
-                nxtP = (int)MathF.Round((inverse ? baseVal / nxtVal - 1f : nxtVal / baseVal - 1f) * 100f);
+                curP = (int)MathF.Round((curVal - baseVal) / baseVal * 100f);
+                nxtP = (int)MathF.Round((nxtVal - baseVal) / baseVal * 100f);
             }
             if (curP == nxtP)
                 return;
@@ -231,8 +236,8 @@ internal class PrefixUpgradeUI : UIState
 
         void AddPrefixStat(string key, float curMult, float nxtMult, bool inverse = false)
         {
-            int curP = (int)MathF.Round((inverse ? 1f / curMult - 1f : curMult - 1f) * 100f);
-            int nxtP = (int)MathF.Round((inverse ? 1f / nxtMult - 1f : nxtMult - 1f) * 100f);
+            int curP = (int)MathF.Round((inverse ? 1f - curMult : curMult - 1f) * 100f);
+            int nxtP = (int)MathF.Round((inverse ? 1f - nxtMult : nxtMult - 1f) * 100f);
             
             if (curP == nxtP)
                 return;
@@ -243,8 +248,8 @@ internal class PrefixUpgradeUI : UIState
             lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
         }
 
-        AddPrefixStat("Damage", current.DamageMult, next.DamageMult);
-        AddPrefixStat("UseSpeed", current.UseTimeMult, next.UseTimeMult, true);
+        AddItem("Damage", baseItem.damage, item.damage,nextItem.damage);
+        AddItem("UseSpeed", baseItem.useTime, item.useTime, nextItem.useTime, true);
         AddPrefixStat("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
         AddPrefixStat("Size", current.ScaleMult, next.ScaleMult);
         AddPrefixStat("Knockback", current.KnockbackMult, next.KnockbackMult);
@@ -262,8 +267,6 @@ internal class PrefixUpgradeUI : UIState
         AddPrefixStat("CritDamage", curCritDmg, nxtCritDmg);
         
         //TODO 1. quitting the game makes the item in the upgrade slot disappear
-        //TODO 2. Weak prefix into tempered prefix makes the reforge disappear, due to it being rounded down to 0% instead of 5%. ONLY ON WEAPONS WITH LOW DMG
-        //TODO 3. The use time string does not calculate the multipliers correctly.
         
         return lines;
     }
@@ -272,6 +275,10 @@ internal class PrefixUpgradeUI : UIState
     {
         int nextType = prefix.GetNext();
         int firstCandidate = nextType;
+        
+        Item baseItem = new();
+        baseItem.SetDefaults(item.type);
+        
         while (nextType != -1)
         {
             Item tmp = new();
@@ -279,14 +286,21 @@ internal class PrefixUpgradeUI : UIState
             VanillaPrefixTweaker.BypassLevelCheck = true;
             tmp.Prefix(nextType);
             VanillaPrefixTweaker.BypassLevelCheck = false;
+            
+            bool diffCurrent = tmp.damage != item.damage || tmp.useTime != item.useTime ||
+                               Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.01 || Math.Abs(tmp.scale - item.scale) > 0.01 ||
+                               Math.Abs(tmp.knockBack - item.knockBack) > 0.01 || tmp.mana != item.mana ||
+                               tmp.crit != item.crit ||
+                               Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01;
+            
+            bool diffBase = tmp.damage != baseItem.damage || tmp.useTime != baseItem.useTime ||
+                            Math.Abs(tmp.shootSpeed - baseItem.shootSpeed) > 0.01 || Math.Abs(tmp.scale - baseItem.scale) > 0.01 ||
+                            Math.Abs(tmp.knockBack - baseItem.knockBack) > 0.01 || tmp.mana != baseItem.mana ||
+                            tmp.crit != baseItem.crit ||
+                            Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(baseItem.prefix)) > 0.01;
 
-            if (tmp.damage != item.damage || tmp.useTime != item.useTime ||
-                Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.01 || Math.Abs(tmp.scale - item.scale) > 0.01 ||
-                Math.Abs(tmp.knockBack - item.knockBack) > 0.01 || tmp.mana != item.mana ||
-                tmp.crit != item.crit ||
-                Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01)
+            if (diffCurrent && diffBase)
                 break;
-
             if (PrefixLoader.GetPrefix(nextType) is not LeveledPrefix nextPrefix)
                 break;
             nextType = nextPrefix.GetNext();
