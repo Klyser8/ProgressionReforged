@@ -1,17 +1,5 @@
 # This file will automatically update with entries for new content after a build and reload.
 
-Items: {
-	SomeSword: {
-		DisplayName: Some Sword
-		Tooltip:
-			'''
-			Template of an item
-			Replacing this tooltip is duty 
-			It's snowing on Mt.Fuji
-			'''
-	}
-}
-
 Prefixes: {
 	BrutalPrefix.DisplayName: Brutal
 	FiercePrefix.DisplayName: Fierce
@@ -50,27 +38,27 @@ Prefixes: {
 	SonicPrefix.DisplayName: Sonic
 
 	DullPrefix: {
-		DisplayName: Dull Prefix
+		DisplayName: Dull
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.DullPrefix.AdditionalTooltip
 	}
 
 	RoughPrefix: {
-		DisplayName: Rough Prefix
+		DisplayName: Rough
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.RoughPrefix.AdditionalTooltip
 	}
 
 	PunishingPrefix: {
-		DisplayName: Punishing Prefix
+		DisplayName: Punishing
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PunishingPrefix.AdditionalTooltip
 	}
 
 	WreckingPrefix: {
-		DisplayName: Wrecking Prefix
+		DisplayName: Wrecking
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.WreckingPrefix.AdditionalTooltip
 	}
 
 	FatalPrefix: {
-		DisplayName: Fatal Prefix
+		DisplayName: Fatal
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.FatalPrefix.AdditionalTooltip
 	}
 
@@ -125,6 +113,11 @@ Prefixes: {
 	}
 
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
+	UnwieldyPrefix.DisplayName: Unwieldy Prefix
+	HeftyPrefix.DisplayName: Hefty Prefix
+	EarthshakingPrefix.DisplayName: Earthshaking Prefix
+	DensePrefix.DisplayName: Dense Prefix
+	CrushingPrefix.DisplayName: Crushing Prefix
 }
 
 PrefixUpgrade: {

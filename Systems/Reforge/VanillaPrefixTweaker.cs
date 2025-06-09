@@ -2,6 +2,7 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 using Terraria.Utilities;
 
 namespace ProgressionReforged.Systems.Reforge;
@@ -11,16 +12,27 @@ public class VanillaPrefixTweaker : GlobalItem
     
     // This is used to bypass the leveled prefix level check, allowing all leveled prefixes to be applied
     internal static bool BypassLevelCheck;
-    public override bool AllowPrefix(Item item, int pre)
+    public override bool AllowPrefix(Item item, int prefixType)
     {
         // Reject vanilla prefixes
-        ModPrefix p = PrefixLoader.GetPrefix(pre);
-        if (p == null || p.Mod == null)
+        ModPrefix modPrefix = PrefixLoader.GetPrefix(prefixType);
+        if (modPrefix?.Mod == null)
             return false;
 
-        // Allow only –1, 0, +1 of the Leveled prefixes chain
-        if (!BypassLevelCheck && p is LeveledPrefix lp)
-            return lp.GetLevel() is >= -1 and <= 1;
+        // When adding prefixes through normal reforging or drops we only want
+        // the first tier of the leveled prefix chain. However items that
+        // already have a higher tier prefix should not lose it when the game
+        // reloads.  If the item already has this prefix, always allow it so it
+        // persists across save/load cycles. Otherwise restrict the random roll
+        // to the first tier unless bypassed by the upgrade UI.
+        if (modPrefix is LeveledPrefix leveledPrefix)
+        {
+            if (item.prefix == prefixType)
+                return true;
+
+            if (!BypassLevelCheck)
+                return leveledPrefix.GetLevel() is >= -1 and <= 1;
+        }
 
         // Allow all modded prefixes otherwise
         return true;
@@ -73,6 +85,31 @@ public class VanillaPrefixTweaker : GlobalItem
         // If the prefix is not a LeveledPrefix, use the default reforge price
         return false;
     }
+    
+    public override void SaveData(Item item, TagCompound tag)
+    {
+        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is LeveledPrefix)
+            tag["SavedLeveledPrefix"] = item.prefix;
+    }
+
+    public override void LoadData(Item item, TagCompound tag)
+    {
+        if (tag.ContainsKey("SavedLeveledPrefix"))
+        {
+            int saved = tag.GetInt("SavedLeveledPrefix");
+            if (saved > 0 && PrefixLoader.GetPrefix(saved) is LeveledPrefix)
+            {
+                if (item.prefix != saved)
+                {
+                    BypassLevelCheck = true;
+                    item.Prefix(saved);
+                    BypassLevelCheck = false;
+                }
+            }
+        }
+    }
+    
+    
     
     private static float WeightedDelta(float mult, float weight, bool inverse = false)
     {

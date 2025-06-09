@@ -351,9 +351,9 @@ internal class PrefixUpgradeUI : UIState
         {
             -1 => 0.75f,
             0 => 1.00f,
-            1 => 2.00f,
-            2 => 3.00f,
-            3 => 4.00f,
+            1 => 1.50f,
+            2 => 2.00f,
+            3 => 3.00f,
             _ => 1.00f
         });
         return price;
