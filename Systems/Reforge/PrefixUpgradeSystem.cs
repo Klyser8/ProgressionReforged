@@ -36,15 +36,10 @@ internal class PrefixUpgradeSystem : ModSystem
         if (UpgradeInterface?.CurrentState is PrefixUpgradeUI ui && !ui.ItemSlotWrapper.Item.IsAir)
         {
             Player player = Main.LocalPlayer;
-            player.QuickSpawnItem(Entity.GetSource_NaturalSpawn(), ui.ItemSlotWrapper.Item);
+            player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), ui.ItemSlotWrapper.Item);
             ui.ItemSlotWrapper.Item.TurnToAir();
         }
         Hide();
-    }
-
-    public override void OnWorldUnload()
-    {
-        PreSaveAndQuit();
     }
 
 

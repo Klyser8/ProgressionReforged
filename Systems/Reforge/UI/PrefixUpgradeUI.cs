@@ -48,7 +48,9 @@ internal class PrefixUpgradeUI : UIState
     {
         if (!_itemSlot.Item.IsAir)
         {
-            Main.LocalPlayer.QuickSpawnItem(Entity.GetSource_NaturalSpawn(),_itemSlot.Item);
+            Player player = Main.LocalPlayer;
+            if (!_itemSlot.Item.IsAir)
+                player.QuickSpawnItem(Entity.GetSource_NaturalSpawn(), _itemSlot.Item);
             _itemSlot.Item.TurnToAir();
         }
     }
@@ -231,7 +233,15 @@ internal class PrefixUpgradeUI : UIState
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
             Color c2 = nxtP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
-            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
+            
+            string curPFormatted = inverse 
+                ? $"{curP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-") 
+                : $"{curP:+0;-0}";
+            string nxtPFormatted = inverse 
+                ? $"{nxtP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-") 
+                : $"{nxtP:+0;-0}";
+            
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curPFormatted}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtPFormatted}%]");
         }
 
         void AddPrefixStat(string key, float curMult, float nxtMult, bool inverse = false)
@@ -245,7 +255,7 @@ internal class PrefixUpgradeUI : UIState
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
             Color c2 = nxtP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
-            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtP:+0;-0}%]");
         }
 
         AddItem("Damage", baseItem.damage, item.damage,nextItem.damage);
@@ -253,7 +263,7 @@ internal class PrefixUpgradeUI : UIState
         AddPrefixStat("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
         AddPrefixStat("Size", current.ScaleMult, next.ScaleMult);
         AddPrefixStat("Knockback", current.KnockbackMult, next.KnockbackMult);
-        AddPrefixStat("ManaCost", current.ManaMult, next.ManaMult, true);
+        AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
         AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit);
         
         float curCritDmg = 1f;
@@ -267,6 +277,7 @@ internal class PrefixUpgradeUI : UIState
         AddPrefixStat("CritDamage", curCritDmg, nxtCritDmg);
         
         //TODO 1. quitting the game makes the item in the upgrade slot disappear
+        //TODO 2. Mana cost rounding is incorrect, and it shows +20% mana cost instead of -20% mana cost for example
         
         return lines;
     }
