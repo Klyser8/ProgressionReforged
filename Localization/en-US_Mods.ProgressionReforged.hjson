@@ -49,6 +49,56 @@ Prefixes: {
 	RefinedPrefix.DisplayName: Refined
 	SonicPrefix.DisplayName: Sonic
 
+	DullPrefix: {
+		DisplayName: Dull Prefix
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.DullPrefix.AdditionalTooltip
+	}
+
+	RoughPrefix: {
+		DisplayName: Rough Prefix
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.RoughPrefix.AdditionalTooltip
+	}
+
+	PunishingPrefix: {
+		DisplayName: Punishing Prefix
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PunishingPrefix.AdditionalTooltip
+	}
+
+	WreckingPrefix: {
+		DisplayName: Wrecking Prefix
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.WreckingPrefix.AdditionalTooltip
+	}
+
+	FatalPrefix: {
+		DisplayName: Fatal Prefix
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.FatalPrefix.AdditionalTooltip
+	}
+
+	FlimsyPrefix: {
+		DisplayName: Flimsy
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.FlimsyPrefix.AdditionalTooltip
+	}
+
+	TickingPrefix: {
+		DisplayName: Ticking
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.TickingPrefix.AdditionalTooltip
+	}
+
+	PricklingPrefix: {
+		DisplayName: Prickling
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PricklingPrefix.AdditionalTooltip
+	}
+
+	NeedlingPrefix: {
+		DisplayName: Needling
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.NeedlingPrefix.AdditionalTooltip
+	}
+
+	CalibratedPrefix: {
+		DisplayName: Calibrated
+		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.CalibratedPrefix.AdditionalTooltip
+	}
+
 	LethalPrefix: {
 		DisplayName: Lethal
 		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.LethalPrefix.AdditionalTooltip
@@ -93,3 +143,5 @@ PrefixUpgrade: {
 	CritChanceLine: Critical strike chance:
 	CritDamageLine: Critical strike damage:
 }
+
+HeavyWorkBenchTooltip: Upgrades equipment prefixes

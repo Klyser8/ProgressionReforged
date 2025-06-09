@@ -30,6 +30,14 @@ public class VanillaPrefixTweaker : GlobalItem
     {
         // Get the current prefix, if it is an instance of LeveledPrefix
         ModPrefix currentPrefix = PrefixLoader.GetPrefix(item.prefix);
+        
+        // If the item has no prefix, reforge cost should be half of its current value
+        if (item.prefix == 0)
+        {
+            reforgePrice = (int)(item.value * 0.5f);
+            return true;
+        }
+
         if (currentPrefix is LeveledPrefix leveledPrefix)
         {
             int reforgeCost = ContentSamples.ItemsByType[item.type].value;
@@ -49,11 +57,11 @@ public class VanillaPrefixTweaker : GlobalItem
             // Multiply by the leveled prefix level to get the final reforge price
             reforgeCost = (int)(reforgeCost * leveledPrefix.GetLevel() switch
             {
-                -1 => 0.75f,
+                -1 => 0.9f,
                 0 => 1.00f,
-                1 => 2.00f,
-                2 => 3.00f,
-                3 => 4.00f,
+                1 => 1.50f,
+                2 => 2.00f,
+                3 => 3.00f,
                 _ => 1.00f
             });
             

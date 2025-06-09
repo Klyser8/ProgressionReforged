@@ -7,7 +7,7 @@ public class WoundingPrefix() : CritDamagePrefix(1, "critDamage")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
     
-    public override float CritDamageMult => 1.24f; // 24% more crit damage
+    public override float CritDamageMult => 1.20f; // 20% more crit damage
     
     public override int GetNext()
     {

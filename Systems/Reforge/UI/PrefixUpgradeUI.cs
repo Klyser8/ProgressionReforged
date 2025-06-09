@@ -209,11 +209,16 @@ internal class PrefixUpgradeUI : UIState
         
         lines.Add($"[c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.StatsHeader")}]");
 
-        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false)
+        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false, bool flat = false)
         {
             int curP;
             int nxtP;
-            if (baseVal == 0f)
+            if (flat)
+            {
+                curP = (int)MathF.Round(curVal - baseVal);
+                nxtP = (int)MathF.Round(nxtVal - baseVal);
+            }
+            else if (baseVal == 0f)
             {
                 curP = (int)MathF.Round(curVal - baseVal);
                 nxtP = (int)MathF.Round(nxtVal - baseVal);
@@ -265,7 +270,7 @@ internal class PrefixUpgradeUI : UIState
         AddPrefixStat("Size", current.ScaleMult, next.ScaleMult);
         AddPrefixStat("Knockback", current.KnockbackMult, next.KnockbackMult);
         AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
-        AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit);
+        AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit, flat: true);
         
         float curCritDmg = 1f;
         if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is ICritDamageProvider curProvider)

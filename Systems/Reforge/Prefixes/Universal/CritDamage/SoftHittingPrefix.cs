@@ -7,7 +7,7 @@ public class SoftHittingPrefix() : CritDamagePrefix(-1, "critDamage")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
     
-    public override float CritDamageMult => 0.75f; // 25% less crit damage
+    public override float CritDamageMult => 0.88f; // 12% less crit damage
     
     public override int GetNext()
     {

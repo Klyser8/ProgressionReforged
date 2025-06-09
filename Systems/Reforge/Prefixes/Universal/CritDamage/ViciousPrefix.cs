@@ -7,7 +7,7 @@ public class ViciousPrefix() : CritDamagePrefix(2, "critDamage")
 {
     public override PrefixCategory Category => PrefixCategory.AnyWeapon;
     
-    public override float CritDamageMult => 1.36f; // 36% more crit damage
+    public override float CritDamageMult => 1.33f; // 33% more crit damage
     
     public override int GetNext()
     {
