@@ -128,8 +128,8 @@ internal class PrefixUpgradeUI : UIState
                 Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
         }
 
-        float statY = SlotY + 30;
-        foreach (string line in GetUpgradeLines(leveled))
+        float statY = SlotY + 28;
+        foreach (string line in GetUpgradeLines(leveled, _itemSlot.Item))
         {
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, new Vector2(SlotX + 100, statY), Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             statY += 20;
@@ -181,7 +181,7 @@ internal class PrefixUpgradeUI : UIState
     }
     
     
-    private static IEnumerable<string> GetUpgradeLines(LeveledPrefix current)
+    private static IEnumerable<string> GetUpgradeLines(LeveledPrefix current, Item item)
     {
         var lines = new List<string>();
 
@@ -191,30 +191,56 @@ internal class PrefixUpgradeUI : UIState
 
         if (PrefixLoader.GetPrefix(nextType) is not LeveledPrefix next)
             return lines;
+        
+        Item baseItem = new();
+        baseItem.SetDefaults(item.type);
 
+        Item nextItem = new();
+        nextItem.SetDefaults(item.type);
+        VanillaPrefixTweaker.BypassLevelCheck = true;
+        nextItem.Prefix(nextType);
+        VanillaPrefixTweaker.BypassLevelCheck = false;
+        
         lines.Add($"[c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.StatsHeader")}]");
 
-        void Add(string key, float cur, float nxt, bool inverse = false)
+        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false)
         {
-            int curP = (int)MathF.Round((inverse ? 1f / cur - 1f : cur - 1f) * 100f);
-            int nxtP = (int)MathF.Round((inverse ? 1f / nxt - 1f : nxt - 1f) * 100f);
+            if (baseVal == 0f)
+                return;
+
+            int curP = (int)MathF.Round((inverse ? baseVal / curVal - 1f : curVal / baseVal - 1f) * 100f);
+            int nxtP = (int)MathF.Round((inverse ? baseVal / nxtVal - 1f : nxtVal / baseVal - 1f) * 100f);
             if (curP == nxtP)
                 return;
 
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
             Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
-            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtP:+0;-0}%]");
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
         }
 
-        Add("Damage", current.DamageMult, next.DamageMult);
-        Add("UseSpeed", current.UseTimeMult, next.UseTimeMult, true);
-        Add("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
-        Add("Size", current.ScaleMult, next.ScaleMult);
-        Add("Knockback", current.KnockbackMult, next.KnockbackMult);
-        Add("ManaCost", current.ManaMult, next.ManaMult, true);
-        Add("CritChance", 1f + current.CritBonus / 100f, 1f + next.CritBonus / 100f);
-        Add("CritDamage", current.CritDamageMultInternal, next.CritDamageMultInternal);
+        void AddPrefixStat(string key, float curMult, float nxtMult, bool inverse = false)
+        {
+            int curP = (int)MathF.Round((inverse ? 1f / curMult - 1f : curMult - 1f) * 100f);
+            int nxtP = (int)MathF.Round((inverse ? 1f / nxtMult - 1f : nxtMult - 1f) * 100f);
+            
+            if (curP == nxtP)
+                return;
+
+            Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
+            Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
+            string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:~{nxtP:+0;-0}%]");
+        }
+
+        AddItem("Damage", baseItem.damage, item.damage, nextItem.damage);
+        AddItem("UseSpeed", baseItem.useTime, item.useTime, nextItem.useTime, true);
+        AddItem("ShootSpeed", baseItem.shootSpeed, item.shootSpeed, nextItem.shootSpeed);
+        AddItem("Size", baseItem.scale, item.scale, nextItem.scale);
+        AddItem("Knockback", baseItem.knockBack, item.knockBack, nextItem.knockBack);
+        AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
+        AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit);
+        AddPrefixStat("CritDamage", current.CritDamageMultInternal, next.CritDamageMultInternal);
 
         return lines;
     }
