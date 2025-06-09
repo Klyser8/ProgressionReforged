@@ -9,7 +9,9 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <Folder Include="Content\Items\" />
+	  <Folder Include="Systems\Reforge\Prefixes\Magic\" />
 	  <Folder Include="Systems\Reforge\Prefixes\Melee\" />
+	  <Folder Include="Systems\Reforge\Prefixes\Ranged\" />
 	</ItemGroup>
 
 	<!-- References -->
