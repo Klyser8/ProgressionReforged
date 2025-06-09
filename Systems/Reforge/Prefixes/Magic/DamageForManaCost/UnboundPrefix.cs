@@ -1,10 +1,12 @@
-﻿using Terraria.ModLoader;
+﻿using ProgressionReforged.Systems.Reforge.Prefixes.Universal.ManaCost;
+using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Melee.DamageForUseTime;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Magic.DamageForManaCost;
 
-public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
+public class UnboundPrefix() : LeveledPrefix(3, "damageForManaCost")
 {
-    public override PrefixCategory Category => PrefixCategory.Melee;
+    public override PrefixCategory Category => PrefixCategory.Magic;
+    
     public override void SetStats(
         ref float damageMult, 
         ref float knockbackMult, 
@@ -14,9 +16,9 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
         ref float manaMult, 
         ref int critBonus)
     {
-        damageMult = 1.70f; // 70% damage
-        scaleMult = 1.30f; // +30% scale
-        useTimeMult = 1.70f; // -70% use time
+        manaMult = 4.00f; // +300% mana cost
+        damageMult = 1.45f; // +45% damage
+        useTimeMult = 0.72f; // -28% use time
         base.SetStats(
             ref damageMult, 
             ref knockbackMult, 
@@ -26,7 +28,7 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
             ref manaMult, 
             ref critBonus);
     }
-
+    
     public override int GetNext()
     {
         return -1;
@@ -34,6 +36,6 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
 
     public override int GetPrevious()
     {
-        return ModContent.PrefixType<CrushingPrefix>();
+        return ModContent.GetInstance<SurgingPrefix>().Type;
     }
 }

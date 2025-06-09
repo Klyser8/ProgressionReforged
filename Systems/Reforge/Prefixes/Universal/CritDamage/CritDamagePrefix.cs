@@ -36,6 +36,5 @@ public abstract class CritDamagePrefix(int level, string chainKey) : LeveledPref
 
 	public override void SetStaticDefaults() {
 		CritDamageTooltip = Mod.GetLocalization($"{LocalizationCategory}.{nameof(CritDamageTooltip)}");
-		_ = AdditionalTooltip;
 	}
 }

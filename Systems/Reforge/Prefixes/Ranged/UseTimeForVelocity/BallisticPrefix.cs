@@ -1,10 +1,11 @@
 ﻿using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Melee.DamageForUseTime;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Ranged.UseTimeForVelocity;
 
-public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
+public class BallisticPrefix() : LeveledPrefix(3, "useTimeForVelocity")
 {
-    public override PrefixCategory Category => PrefixCategory.Melee;
+    public override PrefixCategory Category => PrefixCategory.Ranged;
+    
     public override void SetStats(
         ref float damageMult, 
         ref float knockbackMult, 
@@ -14,9 +15,9 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
         ref float manaMult, 
         ref int critBonus)
     {
-        damageMult = 1.70f; // 70% damage
-        scaleMult = 1.30f; // +30% scale
-        useTimeMult = 1.70f; // -70% use time
+        shootSpeedMult = 0.31f; // -69% shoot speed
+        useTimeMult = 0.50f; // -50% use time
+        damageMult = 0.75f; // -25% damage
         base.SetStats(
             ref damageMult, 
             ref knockbackMult, 
@@ -26,7 +27,7 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
             ref manaMult, 
             ref critBonus);
     }
-
+    
     public override int GetNext()
     {
         return -1;
@@ -34,6 +35,6 @@ public class EarthshakingPrefix() : LeveledPrefix(3, "damageForUseTime")
 
     public override int GetPrevious()
     {
-        return ModContent.PrefixType<CrushingPrefix>();
+        return ModContent.PrefixType<PropelledPrefix>();
     }
 }

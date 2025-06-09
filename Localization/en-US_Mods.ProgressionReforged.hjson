@@ -36,88 +36,37 @@ Prefixes: {
 	HamperedPrefix.DisplayName: Hampered
 	RefinedPrefix.DisplayName: Refined
 	SonicPrefix.DisplayName: Sonic
-
-	DullPrefix: {
-		DisplayName: Dull
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.DullPrefix.AdditionalTooltip
-	}
-
-	RoughPrefix: {
-		DisplayName: Rough
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.RoughPrefix.AdditionalTooltip
-	}
-
-	PunishingPrefix: {
-		DisplayName: Punishing
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PunishingPrefix.AdditionalTooltip
-	}
-
-	WreckingPrefix: {
-		DisplayName: Wrecking
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.WreckingPrefix.AdditionalTooltip
-	}
-
-	FatalPrefix: {
-		DisplayName: Fatal
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.FatalPrefix.AdditionalTooltip
-	}
-
-	FlimsyPrefix: {
-		DisplayName: Flimsy
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.FlimsyPrefix.AdditionalTooltip
-	}
-
-	TickingPrefix: {
-		DisplayName: Ticking
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.TickingPrefix.AdditionalTooltip
-	}
-
-	PricklingPrefix: {
-		DisplayName: Prickling
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PricklingPrefix.AdditionalTooltip
-	}
-
-	NeedlingPrefix: {
-		DisplayName: Needling
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.NeedlingPrefix.AdditionalTooltip
-	}
-
-	CalibratedPrefix: {
-		DisplayName: Calibrated
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.CalibratedPrefix.AdditionalTooltip
-	}
-
-	LethalPrefix: {
-		DisplayName: Lethal
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.LethalPrefix.AdditionalTooltip
-	}
-
-	PrecisePrefix: {
-		DisplayName: Precise
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.PrecisePrefix.AdditionalTooltip
-	}
-
-	SoftHittingPrefix: {
-		DisplayName: Soft Hitting
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.SoftHittingPrefix.AdditionalTooltip
-	}
-
-	ViciousPrefix: {
-		DisplayName: Vicious
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.ViciousPrefix.AdditionalTooltip
-	}
-
-	WoundingPrefix: {
-		DisplayName: Wounding
-		AdditionalTooltip: Mods.ProgressionReforged.Prefixes.WoundingPrefix.AdditionalTooltip
-	}
-
+	UnwieldyPrefix.DisplayName: Unwieldy
+	DensePrefix.DisplayName: Dense
+	HeftyPrefix.DisplayName: Hefty
+	CrushingPrefix.DisplayName: Crushing
+	EarthshakingPrefix.DisplayName: Earthshaking
+	DullPrefix.DisplayName: Dull
+	RoughPrefix.DisplayName: Rough
+	PunishingPrefix.DisplayName: Punishing
+	WreckingPrefix.DisplayName: Wrecking
+	FatalPrefix.DisplayName: Fatal
+	FlimsyPrefix.DisplayName: Flimsy
+	TickingPrefix.DisplayName: Ticking
+	PricklingPrefix.DisplayName: Prickling
+	NeedlingPrefix.DisplayName: Needling
+	CalibratedPrefix.DisplayName: Calibrated
+	LethalPrefix.DisplayName: Lethal
+	PrecisePrefix.DisplayName: Precise
+	SoftHittingPrefix.DisplayName: Soft Hitting
+	ViciousPrefix.DisplayName: Vicious
+	WoundingPrefix.DisplayName: Wounding
+	JammedPrefix.DisplayName: Jammed
+	DrawnPrefix.DisplayName: Drawn
+	TensedPrefix.DisplayName: Tensed
+	PropelledPrefix.DisplayName: Propelled
+	BallisticPrefix.DisplayName: Ballistic
+	VolatilePrefix.DisplayName: Volatile
+	SparkingPrefix.DisplayName: Sparking
+	BurstingPrefix.DisplayName: Bursting
+	SurgingPrefix.DisplayName: Surging
+	UnboundPrefix.DisplayName: Unbound
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
-	UnwieldyPrefix.DisplayName: Unwieldy Prefix
-	HeftyPrefix.DisplayName: Hefty Prefix
-	EarthshakingPrefix.DisplayName: Earthshaking Prefix
-	DensePrefix.DisplayName: Dense Prefix
-	CrushingPrefix.DisplayName: Crushing Prefix
 }
 
 PrefixUpgrade: {
