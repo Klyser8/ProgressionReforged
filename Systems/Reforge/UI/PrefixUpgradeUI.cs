@@ -128,10 +128,10 @@ internal class PrefixUpgradeUI : UIState
                 Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
         }
 
-        float statY = SlotY + 100;
+        float statY = SlotY + 30;
         foreach (string line in GetUpgradeLines(leveled))
         {
-            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, new Vector2(SlotX + 50, statY), Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
+            ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, line, new Vector2(SlotX + 100, statY), Color.White, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             statY += 20;
         }
 
@@ -203,7 +203,7 @@ internal class PrefixUpgradeUI : UIState
 
             Color c1 = curP >= 0 ? Color.DarkGreen : Color.DarkRed;
             Color c2 = curP >= 0 ? Color.LightGreen : Color.Red;
-            string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}");
+            string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
             lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curP:+0;-0}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtP:+0;-0}%]");
         }
 

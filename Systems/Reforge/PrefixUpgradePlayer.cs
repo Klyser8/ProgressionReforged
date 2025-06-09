@@ -36,8 +36,7 @@ internal class PrefixUpgradePlayer : ModPlayer
             Item item = inventory[slot];
             if (wrapper.Item.IsAir && !item.IsAir && (wrapper.ValidItemFunc?.Invoke(item) ?? true))
             {
-                Main.cursorItemIconEnabled = true;
-                Main.cursorItemIconID = item.type;
+                Main.cursorOverride = 9;
                 return true;
             }
         }
