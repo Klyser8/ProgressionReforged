@@ -181,8 +181,9 @@ internal class PrefixUpgradeUI : UIState
         _itemSlot.Item.stack = stack;
 
         ItemLoader.PostReforge(_itemSlot.Item);
+        PopupText.NewText(PopupTextContext.ItemReforge, _itemSlot.Item, _itemSlot.Item.stack, noStack: true);
         SoundEngine.PlaySound(SoundID.Item53);
-        SoundEngine.PlaySound(SoundID.Item129); // 35, 
+        SoundEngine.PlaySound(SoundID.Item129);
     }
     
     

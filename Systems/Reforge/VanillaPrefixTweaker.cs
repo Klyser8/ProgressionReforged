@@ -32,7 +32,7 @@ public class VanillaPrefixTweaker : GlobalItem
         ModPrefix currentPrefix = PrefixLoader.GetPrefix(item.prefix);
         if (currentPrefix is LeveledPrefix leveledPrefix)
         {
-            int reforgeCost = ContentSamples.ItemsByType[item.type].value;
+            int reforgeCost = ContentSamples.ItemsByType[item.type].value / 2;
             // Apply price weights based on the leveled prefix stats
             float delta = 
                 WeightedDelta(leveledPrefix.DamageMult, PriceWeight.Damage) +

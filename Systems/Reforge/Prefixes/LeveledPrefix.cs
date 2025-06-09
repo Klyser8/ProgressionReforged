@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes;
@@ -39,36 +40,7 @@ public abstract class LeveledPrefix(int level, string chainKey) : ModPrefix
    public abstract int GetNext();
    
    // Returns the previous leveled prefix in the chain. Override this method to implement the chain logic, returns -1 if there is no previous prefix.
-   public abstract int GetPrevious(); 
-
-   // Base price scaling (override per category if you like)
-   // public override void ModifyValue(ref float valueMult) {
-   //    // 1) Convert *all* prefix stats into signed percent deltas
-   //    // float delta =
-   //    //    WeightedDelta(DamageMult, PriceWeight.Damage)
-   //    //    + WeightedDelta(UseTimeMult, PriceWeight.UseSpeed, inverse: true)
-   //    //    + WeightedDelta(ShootSpeedMult, PriceWeight.ShootSpeed)
-   //    //    + WeightedDelta(ScaleMult, PriceWeight.Size)
-   //    //    + WeightedDelta(KnockbackMult, PriceWeight.Knockback)
-   //    //    + WeightedDelta(ManaMult, PriceWeight.ManaCost, inverse: true)
-   //    //    + CritBonus / 100f * PriceWeight.CritChance
-   //    //    + (CritDamageMultInternal - 1f) * PriceWeight.CritDamage;
-   //    //
-   //    // // stack on top of anything another mod might have done
-   //    // valueMult *= 1f + delta;
-   //    //
-   //    // // tier price ladder
-   //    // valueMult *= Level switch
-   //    // {
-   //    //    -1 => .75f, 
-   //    //    0 => 1.5f, 
-   //    //    1 => 2f, 
-   //    //    2 => 3f, 
-   //    //    3 => 4f, 
-   //    //    _ => 1f
-   //    // };
-   //    valueMult = Level;
-   // }
+   public abstract int GetPrevious();
 
    // Level getter
    public int GetLevel() => Level;
