@@ -50,7 +50,7 @@ internal class PrefixUpgradeUI : UIState
         {
             Player player = Main.LocalPlayer;
             if (!_itemSlot.Item.IsAir)
-                player.QuickSpawnItem(Entity.GetSource_NaturalSpawn(), _itemSlot.Item);
+                player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), _itemSlot.Item);
             _itemSlot.Item.TurnToAir();
         }
     }

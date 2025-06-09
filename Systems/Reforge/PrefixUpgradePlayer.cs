@@ -11,6 +11,35 @@ namespace ProgressionReforged.Systems.Reforge;
 internal class PrefixUpgradePlayer : ModPlayer
 {
     
+    internal Item StoredUpgradeItem;
+
+    public override void Initialize()
+    {
+        StoredUpgradeItem = new Item();
+    }
+
+    public override void SaveData(TagCompound tag)
+    {
+        if (!StoredUpgradeItem.IsAir)
+            tag["StoredUpgradeItem"] = ItemIO.Save(StoredUpgradeItem);
+    }
+
+    public override void LoadData(TagCompound tag)
+    {
+        StoredUpgradeItem = new Item();
+        if (tag.ContainsKey("StoredUpgradeItem"))
+            StoredUpgradeItem = ItemIO.Load(tag.GetCompound("StoredUpgradeItem"));
+    }
+
+    public override void OnEnterWorld()
+    {
+        if (!StoredUpgradeItem.IsAir)
+        {
+            Main.LocalPlayer.QuickSpawnClonedItemDirect(Terraria.Entity.GetSource_NaturalSpawn(), StoredUpgradeItem);
+            StoredUpgradeItem.TurnToAir();
+        }
+    }
+    
     public override bool ShiftClickSlot(Item[] inventory, int context, int slot)
     {
         if (context == ItemSlot.Context.InventoryItem &&

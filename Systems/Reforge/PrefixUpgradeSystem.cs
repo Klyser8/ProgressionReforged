@@ -35,11 +35,10 @@ internal class PrefixUpgradeSystem : ModSystem
     {
         PrefixUpgradeUI ui = UpgradeInterface?.CurrentState as PrefixUpgradeUI ?? UpgradeUI;
         
-        ProgressionReforged.Instance().Logger.Debug($"Saving item: {ui?.ItemSlotWrapper.Item.Name} (IsAir: {ui?.ItemSlotWrapper.Item.IsAir})");
         if (ui != null && !ui.ItemSlotWrapper.Item.IsAir)
         {
-            Player player = Main.LocalPlayer;
-            player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), ui.ItemSlotWrapper.Item);
+            PrefixUpgradePlayer mp = Main.LocalPlayer.GetModPlayer<PrefixUpgradePlayer>();
+            mp.StoredUpgradeItem = ui.ItemSlotWrapper.Item.Clone();
             ui.ItemSlotWrapper.Item.TurnToAir();
         }
         Hide();
@@ -66,7 +65,8 @@ internal class PrefixUpgradeSystem : ModSystem
     {
         if (UpgradeInterface?.CurrentState != null)
         {
-            if (!Main.playerInventory || !PlayerIsNearBench() || AnotherInterfaceOpen())
+            bool inOptions = Main.ingameOptionsWindow || Main.InGameUI.IsVisible;
+            if ((!Main.playerInventory && !inOptions) || !PlayerIsNearBench() || AnotherInterfaceOpen())
             {
                 Hide();
                 return;
