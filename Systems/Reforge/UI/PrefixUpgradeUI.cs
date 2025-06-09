@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using ProgressionReforged.Systems.Reforge.Prefixes;
+using ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritDamage;
 using ReLogic.Content;
 
 namespace ProgressionReforged.Systems.Reforge.UI;
@@ -84,9 +85,10 @@ internal class PrefixUpgradeUI : UIState
             ChatManager.DrawColorCodedStringWithShadow(spriteBatch, FontAssets.MouseText.Value, message, new Vector2(SlotX + 50, SlotY), Color.Red, 0f, Vector2.Zero, Vector2.One, -1f, 2f);
             return;
         }
-
+        
+        int nextType = GetNextUsefulPrefix(_itemSlot.Item, leveled);
         int price = PrefixUpgradePrice(_itemSlot.Item, leveled);
-        bool atMax = leveled.GetNext() == -1;
+        bool atMax = nextType == -1;
         int extraOffset = 0;
         if (atMax)
         {
@@ -167,8 +169,9 @@ internal class PrefixUpgradeUI : UIState
 
         Item newItem = _itemSlot.Item.Clone();
         newItem.SetDefaults(newItem.type);
+        int applyPrefix = GetNextUsefulPrefix(_itemSlot.Item, leveled);
         VanillaPrefixTweaker.BypassLevelCheck = true;
-        newItem.Prefix(leveled.GetNext());
+        newItem.Prefix(applyPrefix);
         VanillaPrefixTweaker.BypassLevelCheck = false;
         _itemSlot.Item = newItem;
         _itemSlot.Item.position = Main.LocalPlayer.Center;
@@ -185,7 +188,7 @@ internal class PrefixUpgradeUI : UIState
     {
         var lines = new List<string>();
 
-        int nextType = current.GetNext();
+        int nextType = GetNextUsefulPrefix(item, current);
         if (nextType == -1)
             return lines;
 
@@ -240,9 +243,50 @@ internal class PrefixUpgradeUI : UIState
         AddItem("Knockback", baseItem.knockBack, item.knockBack, nextItem.knockBack);
         AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
         AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit);
-        AddPrefixStat("CritDamage", current.CritDamageMultInternal, next.CritDamageMultInternal);
+        
+        float curCritDmg = 1f;
+        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is ICritDamageProvider curProvider)
+            curCritDmg = curProvider.CritDamageMult;
+
+        float nxtCritDmg = 1f;
+        if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is ICritDamageProvider nxtProvider)
+            nxtCritDmg = nxtProvider.CritDamageMult;
+
+        AddPrefixStat("CritDamage", curCritDmg, nxtCritDmg);
 
         return lines;
+    }
+    
+    private static int GetNextUsefulPrefix(Item item, LeveledPrefix prefix)
+    {
+        int nextType = prefix.GetNext();
+        while (nextType != -1)
+        {
+            Item tmp = new();
+            tmp.SetDefaults(item.type);
+            VanillaPrefixTweaker.BypassLevelCheck = true;
+            tmp.Prefix(nextType);
+            VanillaPrefixTweaker.BypassLevelCheck = false;
+
+            if (tmp.damage != item.damage || tmp.useTime != item.useTime ||
+                Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.01 || Math.Abs(tmp.scale - item.scale) > 0.01 ||
+                Math.Abs(tmp.knockBack - item.knockBack) > 0.01 || tmp.mana != item.mana ||
+                tmp.crit != item.crit ||
+                Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01)
+                break;
+
+            if (PrefixLoader.GetPrefix(nextType) is not LeveledPrefix nextPrefix)
+                break;
+            nextType = nextPrefix.GetNext();
+        }
+        return nextType;
+    }
+
+    private static float GetCritDamage(int prefix)
+    {
+        if (prefix > 0 && PrefixLoader.GetPrefix(prefix) is ICritDamageProvider p)
+            return p.CritDamageMult;
+        return 1f;
     }
 
 
