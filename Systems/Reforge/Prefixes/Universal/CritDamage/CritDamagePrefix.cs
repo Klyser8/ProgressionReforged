@@ -12,11 +12,11 @@ public abstract class CritDamagePrefix(int level, string chainKey) : LeveledPref
     // subclasses just override this property to pick their own value
     public abstract float CritDamageMult { get; }
 
-    public override void SetStats(ref float damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
+    public override void SetStats(ref float _damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
 	    ref float shootSpeedMult, ref float manaMult, ref int critBonus)
     {
 	    CritDamageMultInternal = CritDamageMult; // assign the crit damage multiplier to the internal field, for price calculation
-	    base.SetStats(ref damageMult, ref knockbackMult, ref useTimeMult, ref scaleMult, ref shootSpeedMult, ref manaMult, ref critBonus);
+	    base.SetStats(ref _damageMult, ref knockbackMult, ref useTimeMult, ref scaleMult, ref shootSpeedMult, ref manaMult, ref critBonus);
     }
 
     public override IEnumerable<TooltipLine> GetTooltipLines(Item item)

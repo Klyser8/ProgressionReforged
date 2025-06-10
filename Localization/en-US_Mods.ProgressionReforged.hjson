@@ -67,6 +67,11 @@ Prefixes: {
 	SurgingPrefix.DisplayName: Surging
 	UnboundPrefix.DisplayName: Unbound
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
+	DamagePrefix1.DisplayName: Damage Prefix1
+	DamagePrefix2.DisplayName: Damage Prefix2
+	DamagePrefix3.DisplayName: Damage Prefix3
+	DamagePrefix4.DisplayName: Damage Prefix4
+	DamagePrefix5.DisplayName: Damage Prefix5
 }
 
 PrefixUpgrade: {

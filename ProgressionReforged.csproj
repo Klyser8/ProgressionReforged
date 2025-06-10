@@ -9,7 +9,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <Folder Include="Content\Items\" />
-	  <Folder Include="Systems\Reforge\Prefixes\Melee\" />
 	</ItemGroup>
 
 	<!-- References -->

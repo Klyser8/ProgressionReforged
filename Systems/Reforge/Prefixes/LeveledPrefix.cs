@@ -23,11 +23,11 @@ public abstract class LeveledPrefix(int level, string chainKey) : ModPrefix
    public float CritDamageMultInternal { get; protected set; } = 1.00f;
    
    // This method MUST be called in any subclass. The assignment of the stats to the class fields is done here, and is needed to calculate the prefixed item's value.
-   public override void SetStats(ref float damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
+   public override void SetStats(ref float _damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
       ref float shootSpeedMult, ref float manaMult, ref int critBonus)
    {
       // Assign the stats from this method to the class fields
-      DamageMult = damageMult;
+      DamageMult = _damageMult;
       KnockbackMult = knockbackMult;
       UseTimeMult = useTimeMult;
       ScaleMult = scaleMult;
