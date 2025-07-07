@@ -6,8 +6,8 @@ public class FlimsyPrefix() : SimpleCritDamagePrefix(
     -1,
     "critChanceForCritDamage",
     PrefixCategory.AnyWeapon,
-    critBonus: -1, // -1% crit chance
-    critDamageMult: 0.88f, // -12% crit damage
+    critBonus: +1, // +1% crit chance
+    critDamageMult: 0.90f, // -10% crit damage
     next: () => ModContent.GetInstance<TickingPrefix>().Type,
     previous: () => -1);
     

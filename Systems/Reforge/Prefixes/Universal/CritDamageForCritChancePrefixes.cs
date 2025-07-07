@@ -6,8 +6,8 @@ public class DullPrefix() : SimpleCritDamagePrefix(
     -1,
     "critDamageForCritChance",
     PrefixCategory.AnyWeapon,
-    critDamageMult: 0.98f, // -2% crit damage
-    critBonus: -2, // -2% crit chance
+    critDamageMult: 1.02f, // +2% crit damage
+    critBonus: -4, // -4% crit chance
     next: () => ModContent.GetInstance<RoughPrefix>().Type,
     previous: () => -1);
     
