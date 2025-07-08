@@ -1,4 +1,5 @@
 ﻿using ProgressionReforged.Systems.Reforge.Prefixes;
+using ProgressionReforged.Systems.Reforge.Prefixes.Accessories;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -64,7 +65,19 @@ public class VanillaPrefixTweaker : GlobalItem
                 leveledPrefix.CritBonus / 100f * PriceWeight.CritChance +
                 (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
                 (leveledPrefix.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-                (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+                (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage +
+                (leveledPrefix is AccessoryPrefix acc
+                    ? acc.DefenseBonusInternal * PriceWeight.Defense +
+                      acc.HealthBonusInternal * PriceWeight.Health +
+                      acc.CritBonusInternal / 100f * PriceWeight.AccessoryCritChance +
+                      acc.ArmorPenBonusInternal * PriceWeight.ArmorPen +
+                      (acc.CritDamageMultInternalAcc - 1f) * PriceWeight.AccessoryCritDamage +
+                      (acc.JumpHeightMultInternal - 1f) * PriceWeight.JumpHeight +
+                      (acc.KnockbackMultInternal - 1f) * PriceWeight.KnockbackResist +
+                      (acc.DamageMultInternal - 1f) * PriceWeight.AccessoryDamage +
+                      (acc.ManaRegenMultInternal - 1f) * PriceWeight.ManaRegen +
+                      (acc.MovementSpeedMultInternal - 1f) * PriceWeight.MovementSpeed
+                    : 0f);
             
             // Apply the delta to the reforge cost
             reforgeCost = (int)(reforgeCost * (1f + delta));
@@ -133,5 +146,15 @@ public class VanillaPrefixTweaker : GlobalItem
         public const float CritDamage  = 2.22f;
         public const float WhipRange   = 1.5f;
         public const float WhipTagDamage = 2.66f;
+        public const float Defense = 1.0f;
+        public const float Health = 1.0f;
+        public const float ArmorPen = 1.0f;
+        public const float AccessoryCritChance = 2.0f;
+        public const float AccessoryCritDamage = 1.5f;
+        public const float JumpHeight = 0.5f;
+        public const float KnockbackResist = 1.0f;
+        public const float AccessoryDamage = 2.0f;
+        public const float ManaRegen = 1.0f;
+        public const float MovementSpeed = 1.0f;
     }
 }

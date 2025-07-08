@@ -81,9 +81,76 @@ Prefixes: {
 	TensionedPrefix.DisplayName: Tensioned
 	ViperousPrefix.DisplayName: Viperous
 	DomineeringPrefix.DisplayName: Domineering
+	AccessoryCritDamageTooltip: "{0:+0;-0}% critical strike damage"
+	AccessoryDamageTooltipAcc: "{0:+0;-0}% damage"
+	DefenseTooltip: "{0:+0;-0} defense"
+	HealthTooltip: "{0:+0;-0} max life"
+	CritChanceTooltip: "{0:+0;-0}% critical strike chance"
+	ArmorPenTooltip: "{0:+0;-0} armor penetration"
+	JumpHeightTooltip: "{0:+0;-0}% jump height"
+	KnockbackResistTooltip: "{0:+0;-0}% knockback resistance"
+	DamageTooltipAcc: "{0:+0;-0}% damage"
+	ManaRegenTooltip: "{0:+0;-0}% mana regeneration"
+	MovementSpeedTooltip: "{0:+0;-0}% movement speed"
+	CritDamageTooltipAcc: "{0:+0;-0}% critical strike damage"
+	WhipTagDamageTooltip: "{0:+0;-0}% whip tag damage"
+	WhipRangeTooltip: "{0:+0;-0} whip range"
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
-	WhipRangeTooltip: "{0:+0;-0}% whip range"
-	WhipTagDamageTooltip: "{0:+0;-0}% summon tag damage"
+	AttentivePrefix.DisplayName: Attentive
+	CloudedPrefix.DisplayName: Clouded
+	InstinctivePrefix.DisplayName: Instinctive
+	LuckyPrefix.DisplayName: Lucky
+	SharpEyedPrefix.DisplayName: Sharp-Eyed
+	AgilePrefix.DisplayName: Agile
+	AirbornPrefixes.DisplayName: Airborn
+	ArcanePrefix.DisplayName: Arcane
+	AttentivePrefixes.DisplayName: Attentive
+	BalancedPrefix.DisplayName: Balanced
+	BluntPrefixes.DisplayName: Blunt
+	BracedPrefixes.DisplayName: Braced
+	BreachingPrefixes.DisplayName: Breaching
+	BuoyantPrefixes.DisplayName: Buoyant
+	CloudedPrefixes.DisplayName: Clouded
+	ClumsyPrefixes.DisplayName: Clumsy
+	CruelPrefixes.DisplayName: Cruel
+	CunningPrefixes.DisplayName: Cunning
+	DrainedPrefix.DisplayName: Drained
+	DrivenPrefix.DisplayName: Driven
+	EdgyPrefixes.DisplayName: Edgy
+	EmpoweredPrefix.DisplayName: Empowered
+	EmptyPrefixes.DisplayName: Empty
+	EnlightenedPrefix.DisplayName: Enlightened
+	FortifiedPrefixes.DisplayName: Fortified
+	FragilePrefixes.DisplayName: Fragile
+	GroundedPrefixes.DisplayName: Grounded
+	InfusedPrefix.DisplayName: Infused
+	InstinctivePrefixes.DisplayName: Instinctive
+	InvasivePrefixes.DisplayName: Invasive
+	LeapingPrefixes.DisplayName: Leaping
+	LuckyPrefixes.DisplayName: Lucky
+	MenacingPrefix.DisplayName: Menacing
+	MercifulPrefixes.DisplayName: Merciful
+	PacingPrefix.DisplayName: Pacing
+	PiercingPrefixes.DisplayName: Piercing
+	PowerlessPrefix.DisplayName: Powerless
+	QuickPrefix.DisplayName: Quick
+	RelentlessPrefix.DisplayName: Relentless
+	RobustPrefixes.DisplayName: Robust
+	RootedPrefixes.DisplayName: Rooted
+	RuthlessPrefixes.DisplayName: Ruthless
+	SharpenedPrefixes.DisplayName: Sharpened
+	SharpEyedPrefixes.DisplayName: Sharp Eyed
+	SlowPrefix.DisplayName: Slow
+	SpringyPrefixes.DisplayName: Springy
+	SteadfastPrefixes.DisplayName: Steadfast
+	StonebornPrefixes.DisplayName: Stoneborn
+	SturdyPrefixes.DisplayName: Sturdy
+	SwiftPrefix.DisplayName: Swift
+	VigorousPrefixes.DisplayName: Vigorous
+	VitalPrefixes.DisplayName: Vital
+	WardingPrefixes.DisplayName: Warding
+	WeightedPrefixes.DisplayName: Weighted
+	WholesomePrefixes.DisplayName: Wholesome
 }
 
 PrefixUpgrade: {

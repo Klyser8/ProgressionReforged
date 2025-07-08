@@ -13,9 +13,11 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using ProgressionReforged.Systems.Reforge.Prefixes;
+using ProgressionReforged.Systems.Reforge.Prefixes.Accessories;
 using ProgressionReforged.Systems.Reforge.Prefixes.Summon;
 using ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritDamage;
 using ReLogic.Content;
+using Terraria.GameContent.Creative;
 
 namespace ProgressionReforged.Systems.Reforge.UI;
 
@@ -301,6 +303,26 @@ internal class PrefixUpgradeUI : UIState
             nextTagDamage = nextTagProvider.WhipTagDamageMult;
         AddPrefixStat("WhipTagDamage", currentTagDamage, nextTagDamage);
         
+        
+        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is IAccessoryPrefixProvider accCur)
+        {
+            IAccessoryPrefixProvider? accNext = null;
+            if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is IAccessoryPrefixProvider n)
+                accNext = n;
+
+            AddItem("Defense", 0, accCur.DefenseBonus, accNext?.DefenseBonus ?? 0, flat: true);
+            AddItem("Health", 0, accCur.HealthBonus, accNext?.HealthBonus ?? 0, flat: true);
+            AddItem("AccessoryCrit", 0, accCur.CritBonus, accNext?.CritBonus ?? 0, flat: true);
+            AddItem("ArmorPen", 0, accCur.ArmorPenBonus, accNext?.ArmorPenBonus ?? 0, flat: true);
+
+            AddPrefixStat("AccessoryDamage", accCur.DamageMult, accNext?.DamageMult ?? 1f);
+            AddPrefixStat("ManaRegen", accCur.ManaRegenMult, accNext?.ManaRegenMult ?? 1f);
+            AddPrefixStat("MovementSpeed", accCur.MovementSpeedMult, accNext?.MovementSpeedMult ?? 1f);
+            AddPrefixStat("JumpHeight", accCur.JumpHeightMult, accNext?.JumpHeightMult ?? 1f);
+            AddPrefixStat("KnockbackResist", accCur.KnockbackMult, accNext?.KnockbackMult ?? 1f);
+            AddPrefixStat("AccessoryCritDamage", accCur.CritDamageMult, accNext?.CritDamageMult ?? 1f);
+        }
+        
         return lines;
     }
     
@@ -377,7 +399,20 @@ internal class PrefixUpgradeUI : UIState
             leveled.CritBonus / 100f * PriceWeight.CritChance +
             (leveled.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
             (leveled.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-            (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+            (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage +
+            (leveled is AccessoryPrefix acc ?
+                acc.DefenseBonusInternal * PriceWeight.Defense +
+                acc.HealthBonusInternal * PriceWeight.Health +
+                acc.CritBonusInternal / 100f * PriceWeight.AccessoryCritChance +
+                acc.ArmorPenBonusInternal * PriceWeight.ArmorPen +
+                (acc.CritDamageMultInternalAcc - 1f) * PriceWeight.AccessoryCritDamage +
+                (acc.JumpHeightMultInternal - 1f) * PriceWeight.JumpHeight +
+                (acc.KnockbackMultInternal - 1f) * PriceWeight.KnockbackResist +
+                (acc.DamageMultInternal - 1f) * PriceWeight.AccessoryDamage +
+                (acc.ManaRegenMultInternal - 1f) * PriceWeight.ManaRegen +
+                (acc.MovementSpeedMultInternal - 1f) * PriceWeight.MovementSpeed
+                : 0f);
+
 
         price = (int)(price * (1f + delta));
         price = (int)(price * (leveled.GetLevel() switch
@@ -410,5 +445,15 @@ internal class PrefixUpgradeUI : UIState
         public const float CritDamage = 2.22f;
         public const float WhipRange = 1.5f;
         public const float WhipTagDamage = 2.66f;
+        public const float Defense = 1.0f;
+        public const float Health = 1.0f;
+        public const float ArmorPen = 1.0f;
+        public const float AccessoryCritChance = 2.0f;
+        public const float AccessoryCritDamage = 1.5f;
+        public const float JumpHeight = 0.5f;
+        public const float KnockbackResist = 1.0f;
+        public const float AccessoryDamage = 2.0f;
+        public const float ManaRegen = 1.0f;
+        public const float MovementSpeed = 1.0f;
     }
 }
