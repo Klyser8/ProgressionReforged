@@ -214,7 +214,7 @@ internal class PrefixUpgradeUI : UIState
         
         lines.Add($"[c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.StatsHeader")}]");
 
-        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false, bool flat = false)
+        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false, bool flipSign = false, bool flat = false)
         {
             int curP;
             int nxtP;
@@ -245,11 +245,11 @@ internal class PrefixUpgradeUI : UIState
             Color c2 = nxtP >= 0 ? Color.LightGreen : Color.Red;
             string header = Language.GetTextValue($"Mods.ProgressionReforged.PrefixUpgrade.{key}Line");
             
-            string curPFormatted = inverse 
-                ? $"{curP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-") 
+            string curPFormatted = flipSign
+                ? $"{curP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-")
                 : $"{curP:+0;-0}";
-            string nxtPFormatted = inverse 
-                ? $"{nxtP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-") 
+            string nxtPFormatted = flipSign
+                ? $"{nxtP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-")
                 : $"{nxtP:+0;-0}";
             
             lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curPFormatted}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtPFormatted}%]");
@@ -270,11 +270,11 @@ internal class PrefixUpgradeUI : UIState
         }
 
         AddItem("Damage", baseItem.damage, item.damage,nextItem.damage);
-        AddItem("UseSpeed", baseItem.useTime, item.useTime, nextItem.useTime, true);
+        AddItem("UseSpeed", baseItem.useTime, item.useTime, nextItem.useTime, inverse: true, flipSign: false);
         AddPrefixStat("ShootSpeed", current.ShootSpeedMult, next.ShootSpeedMult);
         AddPrefixStat("Size", current.ScaleMult, next.ScaleMult);
         AddPrefixStat("Knockback", current.KnockbackMult, next.KnockbackMult);
-        AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, true);
+        AddItem("ManaCost", baseItem.mana, item.mana, nextItem.mana, inverse: true, flipSign: true);
         AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit, flat: true);
         
         float curCritDmg = 1f;

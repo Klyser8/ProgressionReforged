@@ -7,8 +7,8 @@ public class VolatilePrefix() : SimpleLeveledPrefix(
     "manaCost",
     PrefixCategory.Magic,
     manaMult: 1.20f, // +20% mana cost
-    damageMult: 0.97f, // -3% damage
-    useTimeMult: 1.02f, // +2% use time
+    damageMult: 1.02f, // +2% damage
+    useTimeMult: 0.99f, // -1% use time
     next: () => ModContent.GetInstance<SparkingPrefix>().Type,
     previous: () => -1);
 
