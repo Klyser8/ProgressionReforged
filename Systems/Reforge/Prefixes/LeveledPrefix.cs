@@ -18,16 +18,18 @@ public abstract class LeveledPrefix(int level, string chainKey) : ModPrefix
    public float ShootSpeedMult { get; private set; } = 1.00f;
    public float ManaMult { get; private set; } = 1.00f;
    public int CritBonus { get; private set; } = 0;
-   // This needs to be assigned manually in subclasses, in order to calculate the prefixed item's value. 
    // Not to be confused with ICritDamageProvider#CritDamageMult, which is used to provide the crit damage multiplier to the crit damage system.
    public float CritDamageMultInternal { get; protected set; } = 1.00f;
+   // Not to be confused with IWhipRangeProvider#WhipRangeMult, which is used to provide the whip range multiplier to the whip range system.
+   public float WhipRangeMultInternal { get; protected set; } = 1.00f;
+   public float WhipTagDamageMultInternal { get; protected set; } = 1.00f;
    
    // This method MUST be called in any subclass. The assignment of the stats to the class fields is done here, and is needed to calculate the prefixed item's value.
-   public override void SetStats(ref float _damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
+   public override void SetStats(ref float damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
       ref float shootSpeedMult, ref float manaMult, ref int critBonus)
    {
       // Assign the stats from this method to the class fields
-      DamageMult = _damageMult;
+      DamageMult = damageMult;
       KnockbackMult = knockbackMult;
       UseTimeMult = useTimeMult;
       ScaleMult = scaleMult;

@@ -1,13 +1,13 @@
 ﻿using System;
 using ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritDamage;
+using Terraria;
 using Terraria.ModLoader;
 
-namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal;
+namespace ProgressionReforged.Systems.Reforge.Prefixes.Summon;
 
-public abstract class SimpleCritDamagePrefix(int level,
+public abstract class SimpleWhipTagDamagePrefix(int level,
         string chainKey,
-        PrefixCategory category,
-        float critDamageMult = 1.00f,
+        float whipTagDamageMult = 1.00f,
         float damageMult = 1.00f,
         float knockbackMult = 1.00f,
         float useTimeMult = 1.00f,
@@ -17,7 +17,7 @@ public abstract class SimpleCritDamagePrefix(int level,
         int critBonus = 0,
         Func<int>? next = null,
         Func<int>? previous = null)
-    : CritDamagePrefix(level, chainKey)
+    : WhipTagDamagePrefix(level, chainKey)
 {
     public override void SetStats(ref float _damageMult, ref float _knockbackMult, ref float _useTimeMult, ref float _scaleMult,
         ref float _shootSpeedMult, ref float _manaMult, ref int _critBonus)
@@ -35,8 +35,18 @@ public abstract class SimpleCritDamagePrefix(int level,
     private readonly Func<int> _next = next ?? (() => -1);
     private readonly Func<int> _previous = previous ?? (() => -1);
 
-    public override PrefixCategory Category => category;
-    public override float CritDamageMult => critDamageMult;
+    public override PrefixCategory Category => PrefixCategory.Melee;
+    
+    public override bool CanRoll(Item item)
+    {
+        if (item.DamageType == DamageClass.SummonMeleeSpeed)
+        {
+            return RollChance(item) > 0;
+        }
+
+        return false;
+    }
+    public override float WhipTagDamageMult => whipTagDamageMult;
     public override int GetNext() => _next();
     public override int GetPrevious() => _previous();
 }

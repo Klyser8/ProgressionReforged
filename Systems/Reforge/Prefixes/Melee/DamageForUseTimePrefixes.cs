@@ -7,8 +7,8 @@ public class UnwieldyPrefix() : SimpleLeveledPrefix(
     -1,
     "damageForUseTime",
     PrefixCategory.Melee,
-    damageMult: 0.96f, // -4% damage
-    scaleMult: 0.95f, // -5% scale
+    damageMult: 1.05f, // +4% damage
+    scaleMult: 1.01f, // +1% scale
     useTimeMult: 1.07f, // +7% use time
     next: () => ModContent.GetInstance<DensePrefix>().Type,
     previous: () => -1);

@@ -2,7 +2,7 @@
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal;
 
-public class UnluckyPrefix() : SimpleLeveledPrefix(
+public class UnluckyPrefix() : SimpleCritChancePrefix(
     -1,
     "critChance",
     PrefixCategory.AnyWeapon,
@@ -10,7 +10,7 @@ public class UnluckyPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<SteadyPrefix>().Type,
     previous: () => -1);
 
-public class SteadyPrefix() : SimpleLeveledPrefix(
+public class SteadyPrefix() : SimpleCritChancePrefix(
     0,
     "critChance",
     PrefixCategory.AnyWeapon,
@@ -18,7 +18,7 @@ public class SteadyPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<SharpPrefix>().Type,
     previous: () => ModContent.GetInstance<UnluckyPrefix>().Type);
     
-public class SharpPrefix() : SimpleLeveledPrefix(
+public class SharpPrefix() : SimpleCritChancePrefix(
     1,
     "critChance",
     PrefixCategory.AnyWeapon,
@@ -26,7 +26,7 @@ public class SharpPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<KeenPrefix>().Type,
     previous: () => ModContent.GetInstance<SteadyPrefix>().Type);
     
-public class KeenPrefix() : SimpleLeveledPrefix(
+public class KeenPrefix() : SimpleCritChancePrefix(
     2,
     "critChance",
     PrefixCategory.AnyWeapon,
@@ -34,7 +34,7 @@ public class KeenPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<ZealousPrefix>().Type,
     previous: () => ModContent.GetInstance<SharpPrefix>().Type);
     
-public class ZealousPrefix() : SimpleLeveledPrefix(
+public class ZealousPrefix() : SimpleCritChancePrefix(
     3,
     "critChance",
     PrefixCategory.AnyWeapon,

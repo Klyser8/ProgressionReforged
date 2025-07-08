@@ -2,7 +2,7 @@
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Universal;
 
-public class FeeblePrefix() : SimpleLeveledPrefix(
+public class FeeblePrefix() : SimpleKnockbackPrefix(
     -1,
     "knockback",
     PrefixCategory.AnyWeapon,
@@ -10,7 +10,7 @@ public class FeeblePrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<RudePrefix>().Type,
     previous: () => -1);
 
-public class RudePrefix() : SimpleLeveledPrefix(
+public class RudePrefix() : SimpleKnockbackPrefix(
     0,
     "knockback",
     PrefixCategory.AnyWeapon,
@@ -18,7 +18,7 @@ public class RudePrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<ForcefulPrefix>().Type,
     previous: () => ModContent.GetInstance<FeeblePrefix>().Type);
 
-public class ForcefulPrefix() : SimpleLeveledPrefix(
+public class ForcefulPrefix() : SimpleKnockbackPrefix(
     1,
     "knockback",
     PrefixCategory.AnyWeapon,
@@ -26,7 +26,7 @@ public class ForcefulPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<PowerfulPrefix>().Type,
     previous: () => ModContent.GetInstance<RudePrefix>().Type);
 
-public class PowerfulPrefix() : SimpleLeveledPrefix(
+public class PowerfulPrefix() : SimpleKnockbackPrefix(
     2,
     "knockback",
     PrefixCategory.AnyWeapon,
@@ -34,7 +34,7 @@ public class PowerfulPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<OverwhelmingPrefix>().Type,
     previous: () => ModContent.GetInstance<ForcefulPrefix>().Type);
 
-public class OverwhelmingPrefix() : SimpleLeveledPrefix(
+public class OverwhelmingPrefix() : SimpleKnockbackPrefix(
     3,
     "knockback",
     PrefixCategory.AnyWeapon,

@@ -1,8 +1,9 @@
-﻿using Terraria.ModLoader;
+﻿using ProgressionReforged.Systems.Reforge.Prefixes.Universal.SimplePrefixes;
+using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Melee;
 
-public class SmallPrefix() : SimpleLeveledPrefix(
+public class SmallPrefix() : SimpleSizePrefix(
     -1,
     "size",
     PrefixCategory.Melee,
@@ -10,7 +11,7 @@ public class SmallPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<AboveAveragePrefix>().Type,
     previous: () => -1);
     
-public class AboveAveragePrefix() : SimpleLeveledPrefix(
+public class AboveAveragePrefix() : SimpleSizePrefix(
     0,
     "size",
     PrefixCategory.Melee,
@@ -18,7 +19,7 @@ public class AboveAveragePrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<BigPrefix>().Type,
     previous: () => ModContent.GetInstance<SmallPrefix>().Type);
     
-public class BigPrefix() : SimpleLeveledPrefix(
+public class BigPrefix() : SimpleSizePrefix(
     1,
     "size",
     PrefixCategory.Melee,
@@ -26,7 +27,7 @@ public class BigPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<MassivePrefix>().Type,
     previous: () => ModContent.GetInstance<AboveAveragePrefix>().Type);
     
-public class MassivePrefix() : SimpleLeveledPrefix(
+public class MassivePrefix() : SimpleSizePrefix(
     2,
     "size",
     PrefixCategory.Melee,
@@ -34,7 +35,7 @@ public class MassivePrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<TitanicPrefix>().Type,
     previous: () => ModContent.GetInstance<BigPrefix>().Type);
     
-public class TitanicPrefix() : SimpleLeveledPrefix(
+public class TitanicPrefix() : SimpleSizePrefix(
     3,
     "size",
     PrefixCategory.Melee,

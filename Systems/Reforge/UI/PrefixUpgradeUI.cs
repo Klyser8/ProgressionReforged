@@ -13,6 +13,7 @@ using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
 using ProgressionReforged.Systems.Reforge.Prefixes;
+using ProgressionReforged.Systems.Reforge.Prefixes.Summon;
 using ProgressionReforged.Systems.Reforge.Prefixes.Universal.CritDamage;
 using ReLogic.Content;
 
@@ -273,17 +274,20 @@ internal class PrefixUpgradeUI : UIState
         AddItem("CritChance", baseItem.crit, item.crit, nextItem.crit, flat: true);
         
         float curCritDmg = 1f;
-        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is ICritDamageProvider curProvider)
-            curCritDmg = curProvider.CritDamageMult;
-
+        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is ICritDamageProvider critDamageProvider)
+            curCritDmg = critDamageProvider.CritDamageMult;
         float nxtCritDmg = 1f;
         if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is ICritDamageProvider nxtProvider)
             nxtCritDmg = nxtProvider.CritDamageMult;
-
         AddPrefixStat("CritDamage", curCritDmg, nxtCritDmg);
         
-        //TODO 1. quitting the game makes the item in the upgrade slot disappear
-        //TODO 2. Mana cost rounding is incorrect, and it shows +20% mana cost instead of -20% mana cost for example
+        float currentWhipRange = 1f;
+        if (item.prefix > 0 && PrefixLoader.GetPrefix(item.prefix) is IWhipRangeProvider whipRangeProvider)
+            currentWhipRange = whipRangeProvider.WhipRangeMult;
+        float nextWhipRange = 1f;
+        if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is IWhipRangeProvider nextWhipRangeProvider)
+            nextWhipRange = nextWhipRangeProvider.WhipRangeMult;
+        AddPrefixStat("WhipRange", currentWhipRange, nextWhipRange);
         
         return lines;
     }
@@ -308,13 +312,15 @@ internal class PrefixUpgradeUI : UIState
                                Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.01 || Math.Abs(tmp.scale - item.scale) > 0.01 ||
                                Math.Abs(tmp.knockBack - item.knockBack) > 0.01 || tmp.mana != item.mana ||
                                tmp.crit != item.crit ||
-                               Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01;
+                               Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01 || 
+                               Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(item.prefix)) > 0.01;
             
             bool diffBase = tmp.damage != baseItem.damage || tmp.useTime != baseItem.useTime ||
                             Math.Abs(tmp.shootSpeed - baseItem.shootSpeed) > 0.01 || Math.Abs(tmp.scale - baseItem.scale) > 0.01 ||
                             Math.Abs(tmp.knockBack - baseItem.knockBack) > 0.01 || tmp.mana != baseItem.mana ||
                             tmp.crit != baseItem.crit ||
-                            Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(baseItem.prefix)) > 0.01;
+                            Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(baseItem.prefix)) > 0.01 ||
+                            Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(baseItem.prefix)) > 0.01;
 
             if (diffCurrent && diffBase)
                 break;
@@ -331,7 +337,13 @@ internal class PrefixUpgradeUI : UIState
             return p.CritDamageMult;
         return 1f;
     }
-
+    
+    private static float GetWhipRange(int prefix)
+    {
+        if (prefix > 0 && PrefixLoader.GetPrefix(prefix) is IWhipRangeProvider p)
+            return p.WhipRangeMult;
+        return 1f;
+    }
 
     private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled)
     {
@@ -344,7 +356,8 @@ internal class PrefixUpgradeUI : UIState
             WeightedDelta(leveled.KnockbackMult, PriceWeight.Knockback) +
             WeightedDelta(leveled.ManaMult, PriceWeight.ManaCost, true) +
             leveled.CritBonus / 100f * PriceWeight.CritChance +
-            (leveled.CritDamageMultInternal - 1f) * PriceWeight.CritDamage;
+            (leveled.CritDamageMultInternal - 1f) * PriceWeight.CritDamage + 
+            (leveled.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange;
 
         price = (int)(price * (1f + delta));
         price = (int)(price * leveled.GetLevel() switch
@@ -375,5 +388,6 @@ internal class PrefixUpgradeUI : UIState
         public const float ManaCost = 1.22f;
         public const float CritChance = 4.00f;
         public const float CritDamage = 2.22f;
+        public const float WhipRange = 1.5f;
     }
 }
