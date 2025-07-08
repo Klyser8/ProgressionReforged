@@ -62,7 +62,9 @@ public class VanillaPrefixTweaker : GlobalItem
                 WeightedDelta(leveledPrefix.KnockbackMult, PriceWeight.Knockback) +
                 WeightedDelta(leveledPrefix.ManaMult, PriceWeight.ManaCost, inverse: true) +
                 leveledPrefix.CritBonus / 100f * PriceWeight.CritChance +
-                (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage;
+                (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
+                (leveledPrefix.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
+                (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
             
             // Apply the delta to the reforge cost
             reforgeCost = (int)(reforgeCost * (1f + delta));
@@ -128,6 +130,8 @@ public class VanillaPrefixTweaker : GlobalItem
         public const float Knockback   = 1.33f;
         public const float ManaCost    = 1.22f;   // inverse
         public const float CritChance  = 4.00f;   // +1 % crit chance
-        public const float CritDamage  = 2.22f;   // your new stat
+        public const float CritDamage  = 2.22f;
+        public const float WhipRange   = 1.5f;
+        public const float WhipTagDamage = 2.22f;
     }
 }

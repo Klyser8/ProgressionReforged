@@ -71,8 +71,14 @@ Prefixes: {
 	ExtendedPrefix.DisplayName: Extended
 	SpanningPrefix.DisplayName: Spanning
 	InfinitePrefix.DisplayName: Infinite
+	UnmarkedPrefix.DisplayName: Unmarked
+	FlaggedPrefix.DisplayName: Flagged
+	BrandingPrefix.DisplayName: Branding
+	DesignatedPrefix.DisplayName: Designated
+	CondemningPrefix.DisplayName: Condemning
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
 	WhipRangeTooltip: "{0:+0;-0}% whip range"
+	WhipTagDamageTooltip: "{0:+0;-0}% summon tag damage"
 }
 
 PrefixUpgrade: {
@@ -91,6 +97,14 @@ PrefixUpgrade: {
 	CritChanceLine: Critical strike chance:
 	CritDamageLine: Critical strike damage:
 	WhipRangeLine: Whip range:
+	WhipTagDamageLine: Summon tag damage:
 }
 
 HeavyWorkBenchTooltip: Upgrades equipment prefixes
+
+Buffs: {
+	PrefixWhipTagDamageBuff: {
+		DisplayName: Prefix Whip Tag Damage Buff
+		Description: Mods.ProgressionReforged.Buffs.PrefixWhipTagDamageBuff.Description
+	}
+}

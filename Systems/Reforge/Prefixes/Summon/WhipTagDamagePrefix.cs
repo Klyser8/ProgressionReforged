@@ -14,7 +14,7 @@ public abstract class WhipTagDamagePrefix(int level, string chainKey) : LeveledP
     public override void SetStats(ref float damageMult, ref float knockbackMult, ref float useTimeMult, ref float scaleMult,
 	    ref float shootSpeedMult, ref float manaMult, ref int critBonus)
     {
-	    WhipTagDamageMultInternal = WhipTagDamageMultInternal; // assign the crit damage multiplier to the internal field, for price calculation
+	    WhipTagDamageMultInternal = WhipTagDamageMult; // assign the crit damage multiplier to the internal field, for price calculation
 	    base.SetStats(ref damageMult, ref knockbackMult, ref useTimeMult, ref scaleMult, ref shootSpeedMult, ref manaMult, ref critBonus);
     }
 
