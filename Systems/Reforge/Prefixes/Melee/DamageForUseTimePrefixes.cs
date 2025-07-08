@@ -1,9 +1,10 @@
 ﻿using ProgressionReforged.Systems.Reforge.Prefixes.Magic;
+using ProgressionReforged.Systems.Reforge.Prefixes.Universal.SimplePrefixes;
 using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Melee;
 
-public class UnwieldyPrefix() : SimpleLeveledPrefix(
+public class UnwieldyPrefix() : SimpleSizePrefix(
     -1,
     "damageForUseTime",
     PrefixCategory.Melee,
@@ -13,7 +14,7 @@ public class UnwieldyPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<DensePrefix>().Type,
     previous: () => -1);
     
-public class DensePrefix() : SimpleLeveledPrefix(
+public class DensePrefix() : SimpleSizePrefix(
     0,
     "damageForUseTime",
     PrefixCategory.Melee,
@@ -23,7 +24,7 @@ public class DensePrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<HeftyPrefix>().Type,
     previous: () => ModContent.GetInstance<UnwieldyPrefix>().Type);
     
-public class HeftyPrefix() : SimpleLeveledPrefix(
+public class HeftyPrefix() : SimpleSizePrefix(
     1,
     "damageForUseTime",
     PrefixCategory.Melee,
@@ -33,7 +34,7 @@ public class HeftyPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<CrushingPrefix>().Type,
     previous: () => ModContent.GetInstance<DensePrefix>().Type);
 
-public class CrushingPrefix() : SimpleLeveledPrefix(
+public class CrushingPrefix() : SimpleSizePrefix(
     2,
     "damageForUseTime",
     PrefixCategory.Melee,
@@ -43,7 +44,7 @@ public class CrushingPrefix() : SimpleLeveledPrefix(
     next: () => ModContent.GetInstance<EarthshakingPrefix>().Type,
     previous: () => ModContent.GetInstance<HeftyPrefix>().Type);
 
-public class EarthshakingPrefix() : SimpleLeveledPrefix(
+public class EarthshakingPrefix() : SimpleSizePrefix(
     3,
     "damageForUseTime",
     PrefixCategory.Melee,

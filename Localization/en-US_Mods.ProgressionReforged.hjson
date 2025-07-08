@@ -76,6 +76,11 @@ Prefixes: {
 	BrandingPrefix.DisplayName: Branding
 	DesignatedPrefix.DisplayName: Designated
 	CondemningPrefix.DisplayName: Condemning
+	LimpPrefix.DisplayName: Limp
+	MeasuredPrefix.DisplayName: Measured
+	TensionedPrefix.DisplayName: Tensioned
+	ViperousPrefix.DisplayName: Viperous
+	DomineeringPrefix.DisplayName: Domineering
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
 	WhipRangeTooltip: "{0:+0;-0}% whip range"
 	WhipTagDamageTooltip: "{0:+0;-0}% summon tag damage"
