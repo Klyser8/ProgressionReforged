@@ -299,15 +299,7 @@ internal class PrefixUpgradeUI : UIState
         float nextTagDamage = 1f;
         if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is IWhipTagDamageProvider nextTagProvider)
             nextTagDamage = nextTagProvider.WhipTagDamageMult;
-        
-        int baseTag = GetBaseWhipTagDamage(baseItem);
-        int curTag  = (int)MathF.Round(baseTag * currentTagDamage);
-        int nxtTag  = (int)MathF.Round(baseTag * nextTagDamage);
-        if (curTag != nxtTag)
-            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.WhipTagDamageLine")}] " +
-                      $"[c/{(curTag >= baseTag ? Color.DarkGreen.Hex3() : Color.DarkRed.Hex3())}:{curTag:+0;-0}] " +
-                      "[c/FFFFFF:→] " +
-                      $"[c/{(nxtTag >= baseTag ? Color.LightGreen.Hex3() : Color.Red.Hex3())}:{nxtTag:+0;-0}]");
+        AddPrefixStat("WhipTagDamage", currentTagDamage, nextTagDamage);
         
         return lines;
     }
@@ -333,14 +325,14 @@ internal class PrefixUpgradeUI : UIState
                                tmp.crit != item.crit ||
                                Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01 ||
                                Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(item.prefix)) > 0.01 ||
-                               GetRoundedWhipTagDamage(tmp) != GetRoundedWhipTagDamage(item);
+                               Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(item.prefix)) > 0.01;
             
             bool diffBase = tmp.damage != baseItem.damage || tmp.useTime != baseItem.useTime ||
                             Math.Abs(tmp.shootSpeed - baseItem.shootSpeed) > 0.01 || Math.Abs(tmp.scale - baseItem.scale) > 0.01 ||
                             Math.Abs(tmp.knockBack - baseItem.knockBack) > 0.01 || tmp.mana != baseItem.mana ||
                             tmp.crit != baseItem.crit ||
                             Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(baseItem.prefix)) > 0.01 ||
-                            GetRoundedWhipTagDamage(tmp) != GetRoundedWhipTagDamage(baseItem);
+                            Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(baseItem.prefix)) > 0.01;
 
             if (diffCurrent && diffBase)
                 return nextType;
@@ -370,20 +362,6 @@ internal class PrefixUpgradeUI : UIState
         if (prefix > 0 && PrefixLoader.GetPrefix(prefix) is IWhipTagDamageProvider p)
             return p.WhipTagDamageMult;
         return 1f;
-    }
-    
-    private static int GetBaseWhipTagDamage(Item item)
-    {
-        if (item.DamageType != DamageClass.SummonMeleeSpeed)
-            return 0;
-        return (int)MathF.Round(ProjectileID.Sets.SummonTagDamageMultiplier[item.shoot]);
-    }
-
-    private static int GetRoundedWhipTagDamage(Item item)
-    {
-        int baseTag = GetBaseWhipTagDamage(item);
-        float mult = GetWhipTagDamageMult(item.prefix);
-        return (int)MathF.Round(baseTag * mult);
     }
 
     private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled, int skippedLevels)
@@ -431,6 +409,6 @@ internal class PrefixUpgradeUI : UIState
         public const float CritChance = 4.00f;
         public const float CritDamage = 2.22f;
         public const float WhipRange = 1.5f;
-        public const float WhipTagDamage = 2.22f;
+        public const float WhipTagDamage = 2.66f;
     }
 }

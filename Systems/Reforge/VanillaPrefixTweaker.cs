@@ -132,6 +132,6 @@ public class VanillaPrefixTweaker : GlobalItem
         public const float CritChance  = 4.00f;   // +1 % crit chance
         public const float CritDamage  = 2.22f;
         public const float WhipRange   = 1.5f;
-        public const float WhipTagDamage = 2.22f;
+        public const float WhipTagDamage = 2.66f;
     }
 }
