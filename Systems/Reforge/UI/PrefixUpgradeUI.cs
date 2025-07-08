@@ -90,7 +90,11 @@ internal class PrefixUpgradeUI : UIState
         }
         
         int nextType = GetNextUsefulPrefix(_itemSlot.Item, leveled);
-        int price = PrefixUpgradePrice(_itemSlot.Item, leveled);
+        int skippedLevels = 0;
+        if (nextType != -1 && PrefixLoader.GetPrefix(nextType) is LeveledPrefix nextPrefix)
+            skippedLevels = Math.Max(0, nextPrefix.GetLevel() - leveled.GetLevel() - 1);
+
+        int price = PrefixUpgradePrice(_itemSlot.Item, leveled, skippedLevels);
         bool atMax = nextType == -1;
         int extraOffset = 0;
         if (atMax)
@@ -361,7 +365,7 @@ internal class PrefixUpgradeUI : UIState
         return 1f;
     }
 
-    private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled)
+    private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled, int skippedLevels)
     {
         int price = ContentSamples.ItemsByType[item.type].value;
         float delta =
@@ -377,7 +381,7 @@ internal class PrefixUpgradeUI : UIState
             (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
 
         price = (int)(price * (1f + delta));
-        price = (int)(price * leveled.GetLevel() switch
+        price = (int)(price * (leveled.GetLevel() switch
         {
             -1 => 0.75f,
             0 => 1.00f,
@@ -385,7 +389,7 @@ internal class PrefixUpgradeUI : UIState
             2 => 2.00f,
             3 => 3.00f,
             _ => 1.00f
-        });
+        } + skippedLevels * 2f));
         return price;
     }
 
