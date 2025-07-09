@@ -5,15 +5,21 @@ namespace ProgressionReforged.Systems.AccessoryPrefixes;
 
 public class KnockbackReductionModPlayer : ModPlayer
 {
-    
-    public float KnockbackMult { get; set; }
-    
+    public float KnockbackMult { get; set; } = 1f;
+
+    public override void ResetEffects()
+    {
+        KnockbackMult = 1f;
+    }
+
     public override void ModifyHurt(ref Player.HurtModifiers modifiers)
     {
-        if (KnockbackMult >= 1f)
+        if (KnockbackMult <= 0f)
         {
-            return; // Player is immune to knockback, no need to modify
+            modifiers.Knockback.Flat = 0f;
+            return;
         }
+
         modifiers.Knockback *= KnockbackMult;
     }
 }

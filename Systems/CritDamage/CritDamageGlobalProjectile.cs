@@ -34,7 +34,11 @@ public class CritDamageGlobalProjectile : GlobalProjectile
                 PrefixLoader.GetPrefix(itemSource.Item.prefix) is ICritDamageProvider p)
             {
                 // Apply the crit damage multiplier
-                _critDamageMult = p.CritDamageMult;
+                _critDamageMult *= p.CritDamageMult;
+            }
+            if (itemSource.Entity is Player plr)
+            {
+                _critDamageMult *= plr.GetModPlayer<AccessoryPrefixes.AccessoryCritDamagePlayer>().CritDamageMult;
             }
         }
     }
