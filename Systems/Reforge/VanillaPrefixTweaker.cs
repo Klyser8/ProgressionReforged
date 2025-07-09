@@ -77,7 +77,7 @@ public class VanillaPrefixTweaker : GlobalItem
                     PriceHelper.WeightedDelta(leveledPrefix.UseTimeMult, PriceHelper.PriceWeight.UseSpeed, inverse: true) +
                     PriceHelper.WeightedDelta(leveledPrefix.ShootSpeedMult, PriceHelper.PriceWeight.ShootSpeed) +
                     PriceHelper.WeightedDelta(leveledPrefix.ScaleMult, PriceHelper.PriceWeight.Size) +
-                    PriceHelper.WeightedDelta(leveledPrefix.KnockbackMult, PriceHelper.PriceWeight.Knockback) +
+                    PriceHelper.WeightedDelta(leveledPrefix.KnockbackMult, PriceHelper.PriceWeight.Knockback, inverse: true) +
                     PriceHelper.WeightedDelta(leveledPrefix.ManaMult, PriceHelper.PriceWeight.ManaCost, inverse: true) +
                     leveledPrefix.CritBonus / 100f * PriceHelper.PriceWeight.CritChance +
                     (leveledPrefix.CritDamageMultInternal - 1f) * PriceHelper.PriceWeight.CritDamage +

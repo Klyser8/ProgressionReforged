@@ -103,7 +103,7 @@ public abstract class AccessoryPrefix(int level, string chainKey)
         if (Math.Abs(JumpHeightMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixJumpHeight", JumpHeightTooltip.Format((int)MathF.Round((JumpHeightMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = JumpHeightMult < 1f };
         if (Math.Abs(KnockbackMult - 1f) > 0.001f)
-            yield return new TooltipLine(Mod, "PrefixKnockbackResist", KnockbackResistTooltip.Format((int)MathF.Round((KnockbackMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = KnockbackMult < 1f };
+            yield return new TooltipLine(Mod, "PrefixKnockbackResist", KnockbackResistTooltip.Format((int)MathF.Round((1f - KnockbackMult) * 100f))) { IsModifier = true, IsModifierBad = KnockbackMult > 1f };
         if (Math.Abs(DamageMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixAccessoryDamage", DamageTooltipAcc.Format((int)MathF.Round((DamageMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = DamageMult < 1f };
         if (Math.Abs(ManaRegenMult - 1f) > 0.001f)

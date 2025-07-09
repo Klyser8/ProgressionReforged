@@ -321,7 +321,7 @@ internal class PrefixUpgradeUI : UIState
             AddPrefixStat("ManaRegen", accCur.ManaRegenMult, accNext?.ManaRegenMult ?? 1f);
             AddPrefixStat("MovementSpeed", accCur.MovementSpeedMult, accNext?.MovementSpeedMult ?? 1f);
             AddPrefixStat("JumpHeight", accCur.JumpHeightMult, accNext?.JumpHeightMult ?? 1f);
-            AddPrefixStat("KnockbackResist", accCur.KnockbackMult, accNext?.KnockbackMult ?? 1f);
+            AddPrefixStat("KnockbackResist", accCur.KnockbackMult, accNext?.KnockbackMult ?? 1f, inverse: true);
             AddPrefixStat("AccessoryCritDamage", accCur.CritDamageMult, accNext?.CritDamageMult ?? 1f);
         }
         
@@ -430,7 +430,7 @@ internal class PrefixUpgradeUI : UIState
             PriceHelper.WeightedDelta(leveled.UseTimeMult, PriceHelper.PriceWeight.UseSpeed, true) +
             PriceHelper.WeightedDelta(leveled.ShootSpeedMult, PriceHelper.PriceWeight.ShootSpeed) +
             PriceHelper.WeightedDelta(leveled.ScaleMult, PriceHelper.PriceWeight.Size) +
-            PriceHelper.WeightedDelta(leveled.KnockbackMult, PriceHelper.PriceWeight.Knockback) +
+            PriceHelper.WeightedDelta(leveled.KnockbackMult, PriceHelper.PriceWeight.Knockback, true) +
             PriceHelper.WeightedDelta(leveled.ManaMult, PriceHelper.PriceWeight.ManaCost, true) +
             leveled.CritBonus / 100f * PriceHelper.PriceWeight.CritChance +
             (leveled.CritDamageMultInternal - 1f) * PriceHelper.PriceWeight.CritDamage +
