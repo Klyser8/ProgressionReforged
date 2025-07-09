@@ -122,7 +122,9 @@ Prefixes: {
 	EmptyPrefixes.DisplayName: Empty
 	EnlightenedPrefix.DisplayName: Enlightened
 	FortifiedPrefixes.DisplayName: Fortified
+	FortifiedPrefix.DisplayName: Fortified Prefix
 	FragilePrefixes.DisplayName: Fragile
+	FragilePrefix.DisplayName: Fragile Prefix
 	GroundedPrefixes.DisplayName: Grounded
 	InfusedPrefix.DisplayName: Infused
 	InstinctivePrefixes.DisplayName: Instinctive
@@ -139,6 +141,7 @@ Prefixes: {
 	QuickPrefix.DisplayName: Quick
 	RelentlessPrefix.DisplayName: Relentless
 	RobustPrefixes.DisplayName: Robust
+	RobustPrefix.DisplayName: Robust Prefix
 	RootedPrefixes.DisplayName: Rooted
 	RuthlessPrefixes.DisplayName: Ruthless
 	SharpenedPrefixes.DisplayName: Sharpened
@@ -148,10 +151,12 @@ Prefixes: {
 	SteadfastPrefixes.DisplayName: Steadfast
 	StonebornPrefixes.DisplayName: Stoneborn
 	SturdyPrefixes.DisplayName: Sturdy
+	SturdyPrefix.DisplayName: Sturdy Prefix
 	SwiftPrefix.DisplayName: Swift
 	VigorousPrefixes.DisplayName: Vigorous
 	VitalPrefixes.DisplayName: Vital
 	WardingPrefixes.DisplayName: Warding
+	WardingPrefix.DisplayName: Warding Prefix
 	WeightedPrefixes.DisplayName: Weighted
 	WholesomePrefixes.DisplayName: Wholesome
 	EdgelessPrefix.DisplayName: Edgeless
@@ -175,7 +180,7 @@ PrefixUpgrade: {
 	CritDamageLine: Critical strike damage:
 	WhipRangeLine: Whip range:
 	WhipTagDamageLine: Summon tag damage:
-	HealthLine: Max life: 
+	HealthLine: Max life:
 	DefenseLine: Defense:
 	AccessoryCritLine: Critical strike chance:
 	ArmorPenLine: Armor penetration:

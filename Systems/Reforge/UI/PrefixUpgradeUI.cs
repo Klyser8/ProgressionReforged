@@ -216,7 +216,8 @@ internal class PrefixUpgradeUI : UIState
         
         lines.Add($"[c/{Color.LightBlue.Hex3()}:{Language.GetTextValue("Mods.ProgressionReforged.PrefixUpgrade.StatsHeader")}]");
 
-        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false, bool flipSign = false, bool flat = false)
+
+        void AddItem(string key, float baseVal, float curVal, float nxtVal, bool inverse = false, bool flipSign = false, bool flat = false, bool showPercent = true)
         {
             int curP;
             int nxtP;
@@ -254,7 +255,9 @@ internal class PrefixUpgradeUI : UIState
                 ? $"{nxtP:+0;-0}".Replace("+", "TEMP").Replace("-", "+").Replace("TEMP", "-")
                 : $"{nxtP:+0;-0}";
             
-            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curPFormatted}%] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtPFormatted}%]");
+            
+            string suffix = showPercent ? "%" : string.Empty;
+            lines.Add($"  [c/{Color.LightBlue.Hex3()}:{header}] [c/{c1.Hex3()}:{curPFormatted}{suffix}] [c/FFFFFF:→] [c/{c2.Hex3()}:{nxtPFormatted}{suffix}]");
         }
 
         void AddPrefixStat(string key, float curMult, float nxtMult, bool inverse = false)
@@ -310,10 +313,10 @@ internal class PrefixUpgradeUI : UIState
             if (nextItem.prefix > 0 && PrefixLoader.GetPrefix(nextItem.prefix) is IAccessoryPrefixProvider n)
                 accNext = n;
 
-            AddItem("Defense", 0, accCur.DefenseBonus, accNext?.DefenseBonus ?? 0, flat: true);
-            AddItem("Health", 0, accCur.HealthBonus, accNext?.HealthBonus ?? 0, flat: true);
+            AddItem("Defense", 0, accCur.DefenseBonus, accNext?.DefenseBonus ?? 0, flat: true, showPercent: false);
+            AddItem("Health", 0, accCur.HealthBonus, accNext?.HealthBonus ?? 0, flat: true, showPercent: false);
             AddItem("AccessoryCrit", 0, accCur.CritBonus, accNext?.CritBonus ?? 0, flat: true);
-            AddItem("ArmorPen", 0, accCur.ArmorPenBonus, accNext?.ArmorPenBonus ?? 0, flat: true);
+            AddItem("ArmorPen", 0, accCur.ArmorPenBonus, accNext?.ArmorPenBonus ?? 0, flat: true, showPercent: false);
 
             AddPrefixStat("AccessoryDamage", accCur.DamageMult, accNext?.DamageMult ?? 1f);
             AddPrefixStat("ManaRegen", accCur.ManaRegenMult, accNext?.ManaRegenMult ?? 1f);
