@@ -153,15 +153,16 @@ public class VanillaPrefixTweaker : GlobalItem
         public const float CritDamage  = 2.22f;
         public const float WhipRange   = 1.5f;
         public const float WhipTagDamage = 2.66f;
-        public const float Defense = 1.0f;
-        public const float Health = 1.0f;
-        public const float ArmorPen = 1.0f;
-        public const float AccessoryCritChance = 2.0f;
-        public const float AccessoryCritDamage = 1.5f;
-        public const float JumpHeight = 0.5f;
-        public const float KnockbackResist = 1.0f;
-        public const float AccessoryDamage = 2.0f;
-        public const float ManaRegen = 1.0f;
-        public const float MovementSpeed = 1.0f;
+        
+        public const float Defense = 0.23f;
+        public const float Health = 0.26f;
+        public const float ArmorPen = 0.26f;
+        public const float AccessoryCritChance = 0.23f;
+        public const float AccessoryCritDamage = 0.23f;
+        public const float JumpHeight = 0.17f;
+        public const float KnockbackResist = 0.20f;
+        public const float AccessoryDamage = 0.20f;
+        public const float ManaRegen = 0.20f;
+        public const float MovementSpeed = 0.17f;
     }
 }

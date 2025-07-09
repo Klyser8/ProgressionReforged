@@ -345,19 +345,19 @@ internal class PrefixUpgradeUI : UIState
             VanillaPrefixTweaker.BypassLevelCheck = false;
             
             bool diffCurrent = tmp.damage != item.damage || tmp.useTime != item.useTime ||
-                               Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.01 || Math.Abs(tmp.scale - item.scale) > 0.01 ||
-                               Math.Abs(tmp.knockBack - item.knockBack) > 0.01 || tmp.mana != item.mana ||
+                               Math.Abs(tmp.shootSpeed - item.shootSpeed) > 0.001 || Math.Abs(tmp.scale - item.scale) > 0.001 ||
+                               Math.Abs(tmp.knockBack - item.knockBack) > 0.001 || tmp.mana != item.mana ||
                                tmp.crit != item.crit ||
-                               Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.01 ||
-                               Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(item.prefix)) > 0.01 ||
-                               Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(item.prefix)) > 0.01;
+                               Math.Abs(GetCritDamage(tmp.prefix) - GetCritDamage(item.prefix)) > 0.001 ||
+                               Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(item.prefix)) > 0.001 ||
+                               Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(item.prefix)) > 0.001;
             
             bool diffBase = tmp.damage != baseItem.damage || tmp.useTime != baseItem.useTime ||
-                            Math.Abs(tmp.shootSpeed - baseItem.shootSpeed) > 0.01 || Math.Abs(tmp.scale - baseItem.scale) > 0.01 ||
-                            Math.Abs(tmp.knockBack - baseItem.knockBack) > 0.01 || tmp.mana != baseItem.mana ||
+                            Math.Abs(tmp.shootSpeed - baseItem.shootSpeed) > 0.001 || Math.Abs(tmp.scale - baseItem.scale) > 0.001 ||
+                            Math.Abs(tmp.knockBack - baseItem.knockBack) > 0.001 || tmp.mana != baseItem.mana ||
                             tmp.crit != baseItem.crit ||
-                            Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(baseItem.prefix)) > 0.01 ||
-                            Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(baseItem.prefix)) > 0.01;
+                            Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(baseItem.prefix)) > 0.001 ||
+                            Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(baseItem.prefix)) > 0.001;
 
             if (prefix is IAccessoryPrefixProvider accCur && PrefixLoader.GetPrefix(tmp.prefix) is IAccessoryPrefixProvider accTmp)
             {
@@ -365,17 +365,17 @@ internal class PrefixUpgradeUI : UIState
                                accCur.HealthBonus != accTmp.HealthBonus ||
                                accCur.CritBonus != accTmp.CritBonus ||
                                accCur.ArmorPenBonus != accTmp.ArmorPenBonus ||
-                               Math.Abs(accCur.CritDamageMult - accTmp.CritDamageMult) > 0.01f ||
-                               Math.Abs(accCur.JumpHeightMult - accTmp.JumpHeightMult) > 0.01f ||
-                               Math.Abs(accCur.KnockbackMult - accTmp.KnockbackMult) > 0.01f ||
-                               Math.Abs(accCur.DamageMult - accTmp.DamageMult) > 0.01f ||
-                               Math.Abs(accCur.ManaRegenMult - accTmp.ManaRegenMult) > 0.01f ||
-                               Math.Abs(accCur.MovementSpeedMult - accTmp.MovementSpeedMult) > 0.01f;
+                               Math.Abs(accCur.CritDamageMult - accTmp.CritDamageMult) > 0.001f ||
+                               Math.Abs(accCur.JumpHeightMult - accTmp.JumpHeightMult) > 0.001f ||
+                               Math.Abs(accCur.KnockbackMult - accTmp.KnockbackMult) > 0.001f ||
+                               Math.Abs(accCur.DamageMult - accTmp.DamageMult) > 0.001f ||
+                               Math.Abs(accCur.ManaRegenMult - accTmp.ManaRegenMult) > 0.001f ||
+                               Math.Abs(accCur.MovementSpeedMult - accTmp.MovementSpeedMult) > 0.001f;
 
                 diffBase |= accTmp.DefenseBonus != 0 || accTmp.HealthBonus != 0 || accTmp.CritBonus != 0 || accTmp.ArmorPenBonus != 0 ||
-                            Math.Abs(accTmp.CritDamageMult - 1f) > 0.01f || Math.Abs(accTmp.JumpHeightMult - 1f) > 0.01f ||
-                            Math.Abs(accTmp.KnockbackMult - 1f) > 0.01f || Math.Abs(accTmp.DamageMult - 1f) > 0.01f ||
-                            Math.Abs(accTmp.ManaRegenMult - 1f) > 0.01f || Math.Abs(accTmp.MovementSpeedMult - 1f) > 0.01f;
+                            Math.Abs(accTmp.CritDamageMult - 1f) > 0.01f || Math.Abs(accTmp.JumpHeightMult - 1f) > 0.001f ||
+                            Math.Abs(accTmp.KnockbackMult - 1f) > 0.01f || Math.Abs(accTmp.DamageMult - 1f) > 0.001f ||
+                            Math.Abs(accTmp.ManaRegenMult - 1f) > 0.01f || Math.Abs(accTmp.MovementSpeedMult - 1f) > 0.001f;
             }
             
             if (diffCurrent && diffBase)
@@ -423,18 +423,17 @@ internal class PrefixUpgradeUI : UIState
             (leveled.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
             (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage +
             (leveled is AccessoryPrefix acc ?
-                acc.DefenseBonusInternal * PriceWeight.Defense +
-                acc.HealthBonusInternal * PriceWeight.Health +
-                acc.CritBonusInternal / 100f * PriceWeight.AccessoryCritChance +
-                acc.ArmorPenBonusInternal * PriceWeight.ArmorPen +
-                (acc.CritDamageMultInternalAcc - 1f) * PriceWeight.AccessoryCritDamage +
-                (acc.JumpHeightMultInternal - 1f) * PriceWeight.JumpHeight +
-                (acc.KnockbackMultInternal - 1f) * PriceWeight.KnockbackResist +
-                (acc.DamageMultInternal - 1f) * PriceWeight.AccessoryDamage +
-                (acc.ManaRegenMultInternal - 1f) * PriceWeight.ManaRegen +
-                (acc.MovementSpeedMultInternal - 1f) * PriceWeight.MovementSpeed
+                ApplyStaticModifier(acc.DefenseBonusInternal, PriceStaticModifiers.Defense, PriceWeight.Defense) +
+                ApplyStaticModifier(acc.HealthBonusInternal, PriceStaticModifiers.Health, PriceWeight.Health) +
+                ApplyStaticModifier(acc.CritBonusInternal, PriceStaticModifiers.AccessoryCritChance, PriceWeight.AccessoryCritChance) +
+                ApplyStaticModifier(acc.ArmorPenBonusInternal, PriceStaticModifiers.ArmorPen, PriceWeight.ArmorPen) +
+                ApplyStaticModifier(acc.CritDamageMultInternalAcc - 1f, PriceStaticModifiers.AccessoryCritDamage, PriceWeight.AccessoryCritDamage) +
+                ApplyStaticModifier(acc.JumpHeightMultInternal - 1f, PriceStaticModifiers.JumpHeight, PriceWeight.JumpHeight) +
+                ApplyStaticModifier(acc.KnockbackMultInternal - 1f, PriceStaticModifiers.KnockbackResist, PriceWeight.KnockbackResist) +
+                ApplyStaticModifier(acc.DamageMultInternal - 1f, PriceStaticModifiers.AccessoryDamage, PriceWeight.AccessoryDamage) +
+                ApplyStaticModifier(acc.ManaRegenMultInternal - 1f, PriceStaticModifiers.ManaRegen, PriceWeight.ManaRegen) +
+                ApplyStaticModifier(acc.MovementSpeedMultInternal - 1f, PriceStaticModifiers.MovementSpeed, PriceWeight.MovementSpeed)
                 : 0f);
-
 
         price = (int)(price * (1f + delta));
         price = (int)(price * (leveled.GetLevel() switch
@@ -449,12 +448,30 @@ internal class PrefixUpgradeUI : UIState
         return price;
     }
 
+    private static float ApplyStaticModifier(float bonus, float staticModifier, float weight)
+    {
+        return (bonus + staticModifier) * weight;
+    }
+
     private static float WeightedDelta(float mult, float weight, bool inverse = false)
     {
         float delta = inverse ? (1f / mult - 1f) : (mult - 1f);
         return delta * weight;
     }
 
+    private static class PriceStaticModifiers
+    {
+        public const float Defense = 1.0f;
+        public const float Health = 5.0f;
+        public const float ArmorPen = 3.0f;
+        public const float AccessoryCritDamage = 3.0f;
+        public const float AccessoryCritChance = 1f;
+        public const float JumpHeight = 1f;
+        public const float KnockbackResist = 1f;
+        public const float AccessoryDamage = 1f;
+        public const float ManaRegen = 1f;
+        public const float MovementSpeed = 1f;
+    }
     private static class PriceWeight
     {
         public const float Damage = 2.50f;
@@ -467,15 +484,16 @@ internal class PrefixUpgradeUI : UIState
         public const float CritDamage = 2.22f;
         public const float WhipRange = 1.5f;
         public const float WhipTagDamage = 2.66f;
+        
         public const float Defense = 1.0f;
-        public const float Health = 0.50f;
-        public const float ArmorPen = 2.0f;
-        public const float AccessoryCritChance = 2.0f;
-        public const float AccessoryCritDamage = 1.5f;
-        public const float JumpHeight = 0.5f;
-        public const float KnockbackResist = 1.0f;
-        public const float AccessoryDamage = 2.0f;
-        public const float ManaRegen = 1.0f;
-        public const float MovementSpeed = 1.0f;
+        public const float Health = 0.25f;
+        public const float ArmorPen = 1.33f;
+        public const float AccessoryCritChance = 1.66f;
+        public const float AccessoryCritDamage = 30.0f;
+        public const float JumpHeight = 15.0f;
+        public const float KnockbackResist = 10.0f;
+        public const float AccessoryDamage = 13.0f;
+        public const float ManaRegen = 6.0f;
+        public const float MovementSpeed = 7.5f;
     }
 }

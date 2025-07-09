@@ -98,17 +98,17 @@ public abstract class AccessoryPrefix(int level, string chainKey)
             yield return new TooltipLine(Mod, "PrefixCrit", CritChanceTooltip.Format(CritBonus)) { IsModifier = true, IsModifierBad = CritBonus < 0 };
         if (ArmorPenBonus != 0)
             yield return new TooltipLine(Mod, "PrefixArmorPen", ArmorPenTooltip.Format(ArmorPenBonus)) { IsModifier = true, IsModifierBad = ArmorPenBonus < 0 };
-        if (Math.Abs(CritDamageMult - 1f) >= 0.01f)
+        if (Math.Abs(CritDamageMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixCritDamageAcc", CritDamageTooltipAcc.Format((int)MathF.Round((CritDamageMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = CritDamageMult < 1f };
-        if (Math.Abs(JumpHeightMult - 1f) >= 0.01f)
+        if (Math.Abs(JumpHeightMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixJumpHeight", JumpHeightTooltip.Format((int)MathF.Round((JumpHeightMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = JumpHeightMult < 1f };
-        if (Math.Abs(KnockbackMult - 1f) >= 0.01f)
+        if (Math.Abs(KnockbackMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixKnockbackResist", KnockbackResistTooltip.Format((int)MathF.Round((KnockbackMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = KnockbackMult < 1f };
-        if (Math.Abs(DamageMult - 1f) >= 0.01f)
+        if (Math.Abs(DamageMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixAccessoryDamage", DamageTooltipAcc.Format((int)MathF.Round((DamageMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = DamageMult < 1f };
-        if (Math.Abs(ManaRegenMult - 1f) >= 0.01f)
+        if (Math.Abs(ManaRegenMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixManaRegen", ManaRegenTooltip.Format((int)MathF.Round((ManaRegenMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = ManaRegenMult < 1f };
-        if (Math.Abs(MovementSpeedMult - 1f) >= 0.01f)
+        if (Math.Abs(MovementSpeedMult - 1f) > 0.001f)
             yield return new TooltipLine(Mod, "PrefixMovementSpeed", MovementSpeedTooltip.Format((int)MathF.Round((MovementSpeedMult - 1f) * 100f))) { IsModifier = true, IsModifierBad = MovementSpeedMult < 1f };
     }
 }
