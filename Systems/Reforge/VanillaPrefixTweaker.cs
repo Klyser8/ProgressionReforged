@@ -53,36 +53,8 @@ public class VanillaPrefixTweaker : GlobalItem
 
         if (currentPrefix is LeveledPrefix leveledPrefix)
         {
-            int reforgeCost = ContentSamples.ItemsByType[item.type].value;
-            // Apply price weights based on the leveled prefix stats
-            float delta = 
-                WeightedDelta(leveledPrefix.DamageMult, PriceWeight.Damage) +
-                WeightedDelta(leveledPrefix.UseTimeMult, PriceWeight.UseSpeed, inverse: true) +
-                WeightedDelta(leveledPrefix.ShootSpeedMult, PriceWeight.ShootSpeed) +
-                WeightedDelta(leveledPrefix.ScaleMult, PriceWeight.Size) +
-                WeightedDelta(leveledPrefix.KnockbackMult, PriceWeight.Knockback) +
-                WeightedDelta(leveledPrefix.ManaMult, PriceWeight.ManaCost, inverse: true) +
-                leveledPrefix.CritBonus / 100f * PriceWeight.CritChance +
-                (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
-                (leveledPrefix.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-                (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage +
-                (leveledPrefix is AccessoryPrefix acc
-                    ? acc.DefenseBonusInternal * PriceWeight.Defense +
-                      acc.HealthBonusInternal * PriceWeight.Health +
-                      acc.CritBonusInternal / 100f * PriceWeight.AccessoryCritChance +
-                      (acc.ArmorPenBonusInternal + 3) * PriceWeight.ArmorPen +                  // + 3 as armor pen prefixes start with a -3 malus
-                      (acc.CritDamageMultInternalAcc - 1f) * PriceWeight.AccessoryCritDamage +
-                      (acc.JumpHeightMultInternal - 1f) * PriceWeight.JumpHeight +
-                      (acc.KnockbackMultInternal - 1f) * PriceWeight.KnockbackResist +
-                      (acc.DamageMultInternal - 1f) * PriceWeight.AccessoryDamage +
-                      (acc.ManaRegenMultInternal - 1f) * PriceWeight.ManaRegen +
-                      (acc.MovementSpeedMultInternal - 1f) * PriceWeight.MovementSpeed
-                    : 0f);
-            
-            // Apply the delta to the reforge cost
-            reforgeCost = (int)(reforgeCost * (1f + delta));
-            // Multiply by the leveled prefix level to get the final reforge price
-            reforgeCost = (int)(reforgeCost * leveledPrefix.GetLevel() switch
+            int baseValue = ContentSamples.ItemsByType[item.type].value;
+            float levelMult = leveledPrefix.GetLevel() switch
             {
                 -1 => 0.9f,
                 0 => 1.00f,
@@ -90,7 +62,30 @@ public class VanillaPrefixTweaker : GlobalItem
                 2 => 2.00f,
                 3 => 3.00f,
                 _ => 1.00f
-            });
+            };
+            
+            int reforgeCost;
+            if (leveledPrefix is AccessoryPrefix acc)
+            {
+                float weight = AccessoryPriceConfig.GetWeight(acc);
+                reforgeCost = (int)(baseValue * weight * levelMult);
+            }
+            else
+            {
+                float delta =
+                    WeightedDelta(leveledPrefix.DamageMult, PriceWeight.Damage) +
+                    WeightedDelta(leveledPrefix.UseTimeMult, PriceWeight.UseSpeed, inverse: true) +
+                    WeightedDelta(leveledPrefix.ShootSpeedMult, PriceWeight.ShootSpeed) +
+                    WeightedDelta(leveledPrefix.ScaleMult, PriceWeight.Size) +
+                    WeightedDelta(leveledPrefix.KnockbackMult, PriceWeight.Knockback) +
+                    WeightedDelta(leveledPrefix.ManaMult, PriceWeight.ManaCost, inverse: true) +
+                    leveledPrefix.CritBonus / 100f * PriceWeight.CritChance +
+                    (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
+                    (leveledPrefix.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
+                    (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+
+                reforgeCost = (int)(baseValue * (1f + delta) * levelMult);
+            }
             
             
             // Ensure the reforge price never drops below half of the unmodified item's value
@@ -153,16 +148,5 @@ public class VanillaPrefixTweaker : GlobalItem
         public const float CritDamage  = 2.22f;
         public const float WhipRange   = 1.5f;
         public const float WhipTagDamage = 2.66f;
-        
-        public const float Defense = 0.23f;
-        public const float Health = 0.26f;
-        public const float ArmorPen = 0.26f;
-        public const float AccessoryCritChance = 0.23f;
-        public const float AccessoryCritDamage = 0.23f;
-        public const float JumpHeight = 0.17f;
-        public const float KnockbackResist = 0.20f;
-        public const float AccessoryDamage = 0.20f;
-        public const float ManaRegen = 0.20f;
-        public const float MovementSpeed = 0.17f;
     }
 }

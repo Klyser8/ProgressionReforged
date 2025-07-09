@@ -410,7 +410,22 @@ internal class PrefixUpgradeUI : UIState
 
     private static int PrefixUpgradePrice(Item item, LeveledPrefix leveled, int skippedLevels)
     {
-        int price = ContentSamples.ItemsByType[item.type].value;
+        int baseValue = ContentSamples.ItemsByType[item.type].value;
+        float levelMult = leveled.GetLevel() switch
+        {
+            -1 => 0.75f,
+            0 => 1.50f, // + 0.75
+            1 => 2.66f, // + 1.16f
+            2 => 4.20f, // + 1.54f
+            3 => 6.00f, // + 2.00f
+            _ => 1.00f
+        } + skippedLevels * 2f;
+
+        if (leveled is AccessoryPrefix acc)
+        {
+            float weight = AccessoryPriceConfig.GetWeight(acc);
+            return (int)(baseValue * weight * levelMult);
+        }
         float delta =
             WeightedDelta(leveled.DamageMult, PriceWeight.Damage) +
             WeightedDelta(leveled.UseTimeMult, PriceWeight.UseSpeed, true) +
@@ -421,56 +436,14 @@ internal class PrefixUpgradeUI : UIState
             leveled.CritBonus / 100f * PriceWeight.CritChance +
             (leveled.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
             (leveled.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-            (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage +
-            (leveled is AccessoryPrefix acc ?
-                ApplyStaticModifier(acc.DefenseBonusInternal, PriceStaticModifiers.Defense, PriceWeight.Defense) +
-                ApplyStaticModifier(acc.HealthBonusInternal, PriceStaticModifiers.Health, PriceWeight.Health) +
-                ApplyStaticModifier(acc.CritBonusInternal, PriceStaticModifiers.AccessoryCritChance, PriceWeight.AccessoryCritChance) +
-                ApplyStaticModifier(acc.ArmorPenBonusInternal, PriceStaticModifiers.ArmorPen, PriceWeight.ArmorPen) +
-                ApplyStaticModifier(acc.CritDamageMultInternalAcc - 1f, PriceStaticModifiers.AccessoryCritDamage, PriceWeight.AccessoryCritDamage) +
-                ApplyStaticModifier(acc.JumpHeightMultInternal - 1f, PriceStaticModifiers.JumpHeight, PriceWeight.JumpHeight) +
-                ApplyStaticModifier(acc.KnockbackMultInternal - 1f, PriceStaticModifiers.KnockbackResist, PriceWeight.KnockbackResist) +
-                ApplyStaticModifier(acc.DamageMultInternal - 1f, PriceStaticModifiers.AccessoryDamage, PriceWeight.AccessoryDamage) +
-                ApplyStaticModifier(acc.ManaRegenMultInternal - 1f, PriceStaticModifiers.ManaRegen, PriceWeight.ManaRegen) +
-                ApplyStaticModifier(acc.MovementSpeedMultInternal - 1f, PriceStaticModifiers.MovementSpeed, PriceWeight.MovementSpeed)
-                : 0f);
-
-        price = (int)(price * (1f + delta));
-        price = (int)(price * (leveled.GetLevel() switch
-        {
-            -1 => 0.75f,
-            0 => 1.00f,
-            1 => 1.50f,
-            2 => 2.00f,
-            3 => 3.00f,
-            _ => 1.00f
-        } + skippedLevels * 2f));
-        return price;
-    }
-
-    private static float ApplyStaticModifier(float bonus, float staticModifier, float weight)
-    {
-        return (bonus + staticModifier) * weight;
+            (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+        return (int)(baseValue * (1f + delta) * levelMult);
     }
 
     private static float WeightedDelta(float mult, float weight, bool inverse = false)
     {
         float delta = inverse ? (1f / mult - 1f) : (mult - 1f);
         return delta * weight;
-    }
-
-    private static class PriceStaticModifiers
-    {
-        public const float Defense = 1.0f;
-        public const float Health = 5.0f;
-        public const float ArmorPen = 3.0f;
-        public const float AccessoryCritDamage = 3.0f;
-        public const float AccessoryCritChance = 1f;
-        public const float JumpHeight = 1f;
-        public const float KnockbackResist = 1f;
-        public const float AccessoryDamage = 1f;
-        public const float ManaRegen = 1f;
-        public const float MovementSpeed = 1f;
     }
     private static class PriceWeight
     {
@@ -484,16 +457,5 @@ internal class PrefixUpgradeUI : UIState
         public const float CritDamage = 2.22f;
         public const float WhipRange = 1.5f;
         public const float WhipTagDamage = 2.66f;
-        
-        public const float Defense = 1.0f;
-        public const float Health = 0.25f;
-        public const float ArmorPen = 1.33f;
-        public const float AccessoryCritChance = 1.66f;
-        public const float AccessoryCritDamage = 30.0f;
-        public const float JumpHeight = 15.0f;
-        public const float KnockbackResist = 10.0f;
-        public const float AccessoryDamage = 13.0f;
-        public const float ManaRegen = 6.0f;
-        public const float MovementSpeed = 7.5f;
     }
 }
