@@ -52,8 +52,7 @@ internal class PrefixUpgradeUI : UIState
         if (!_itemSlot.Item.IsAir)
         {
             Player player = Main.LocalPlayer;
-            if (!_itemSlot.Item.IsAir)
-                player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), _itemSlot.Item);
+            player.QuickSpawnClonedItemDirect(Entity.GetSource_NaturalSpawn(), _itemSlot.Item);
             _itemSlot.Item.TurnToAir();
         }
     }
@@ -427,35 +426,16 @@ internal class PrefixUpgradeUI : UIState
             return (int)(baseValue * weight * levelMult);
         }
         float delta =
-            WeightedDelta(leveled.DamageMult, PriceWeight.Damage) +
-            WeightedDelta(leveled.UseTimeMult, PriceWeight.UseSpeed, true) +
-            WeightedDelta(leveled.ShootSpeedMult, PriceWeight.ShootSpeed) +
-            WeightedDelta(leveled.ScaleMult, PriceWeight.Size) +
-            WeightedDelta(leveled.KnockbackMult, PriceWeight.Knockback) +
-            WeightedDelta(leveled.ManaMult, PriceWeight.ManaCost, true) +
-            leveled.CritBonus / 100f * PriceWeight.CritChance +
-            (leveled.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
-            (leveled.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-            (leveled.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+            PriceHelper.WeightedDelta(leveled.DamageMult, PriceHelper.PriceWeight.Damage) +
+            PriceHelper.WeightedDelta(leveled.UseTimeMult, PriceHelper.PriceWeight.UseSpeed, true) +
+            PriceHelper.WeightedDelta(leveled.ShootSpeedMult, PriceHelper.PriceWeight.ShootSpeed) +
+            PriceHelper.WeightedDelta(leveled.ScaleMult, PriceHelper.PriceWeight.Size) +
+            PriceHelper.WeightedDelta(leveled.KnockbackMult, PriceHelper.PriceWeight.Knockback) +
+            PriceHelper.WeightedDelta(leveled.ManaMult, PriceHelper.PriceWeight.ManaCost, true) +
+            leveled.CritBonus / 100f * PriceHelper.PriceWeight.CritChance +
+            (leveled.CritDamageMultInternal - 1f) * PriceHelper.PriceWeight.CritDamage +
+            (leveled.WhipRangeMultInternal - 1f) * PriceHelper.PriceWeight.WhipRange +
+            (leveled.WhipTagDamageMultInternal - 1f) * PriceHelper.PriceWeight.WhipTagDamage;
         return (int)(baseValue * (1f + delta) * levelMult);
-    }
-
-    private static float WeightedDelta(float mult, float weight, bool inverse = false)
-    {
-        float delta = inverse ? (1f / mult - 1f) : (mult - 1f);
-        return delta * weight;
-    }
-    private static class PriceWeight
-    {
-        public const float Damage = 2.50f;
-        public const float UseSpeed = 3.25f;
-        public const float ShootSpeed = 0.80f;
-        public const float Size = 1.50f;
-        public const float Knockback = 1.33f;
-        public const float ManaCost = 1.22f;
-        public const float CritChance = 4.00f;
-        public const float CritDamage = 2.22f;
-        public const float WhipRange = 1.5f;
-        public const float WhipTagDamage = 2.66f;
     }
 }

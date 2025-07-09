@@ -73,16 +73,16 @@ public class VanillaPrefixTweaker : GlobalItem
             else
             {
                 float delta =
-                    WeightedDelta(leveledPrefix.DamageMult, PriceWeight.Damage) +
-                    WeightedDelta(leveledPrefix.UseTimeMult, PriceWeight.UseSpeed, inverse: true) +
-                    WeightedDelta(leveledPrefix.ShootSpeedMult, PriceWeight.ShootSpeed) +
-                    WeightedDelta(leveledPrefix.ScaleMult, PriceWeight.Size) +
-                    WeightedDelta(leveledPrefix.KnockbackMult, PriceWeight.Knockback) +
-                    WeightedDelta(leveledPrefix.ManaMult, PriceWeight.ManaCost, inverse: true) +
-                    leveledPrefix.CritBonus / 100f * PriceWeight.CritChance +
-                    (leveledPrefix.CritDamageMultInternal - 1f) * PriceWeight.CritDamage +
-                    (leveledPrefix.WhipRangeMultInternal - 1f) * PriceWeight.WhipRange +
-                    (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceWeight.WhipTagDamage;
+                    PriceHelper.WeightedDelta(leveledPrefix.DamageMult, PriceHelper.PriceWeight.Damage) +
+                    PriceHelper.WeightedDelta(leveledPrefix.UseTimeMult, PriceHelper.PriceWeight.UseSpeed, inverse: true) +
+                    PriceHelper.WeightedDelta(leveledPrefix.ShootSpeedMult, PriceHelper.PriceWeight.ShootSpeed) +
+                    PriceHelper.WeightedDelta(leveledPrefix.ScaleMult, PriceHelper.PriceWeight.Size) +
+                    PriceHelper.WeightedDelta(leveledPrefix.KnockbackMult, PriceHelper.PriceWeight.Knockback) +
+                    PriceHelper.WeightedDelta(leveledPrefix.ManaMult, PriceHelper.PriceWeight.ManaCost, inverse: true) +
+                    leveledPrefix.CritBonus / 100f * PriceHelper.PriceWeight.CritChance +
+                    (leveledPrefix.CritDamageMultInternal - 1f) * PriceHelper.PriceWeight.CritDamage +
+                    (leveledPrefix.WhipRangeMultInternal - 1f) * PriceHelper.PriceWeight.WhipRange +
+                    (leveledPrefix.WhipTagDamageMultInternal - 1f) * PriceHelper.PriceWeight.WhipTagDamage;
 
                 reforgeCost = (int)(baseValue * (1f + delta) * levelMult);
             }
@@ -124,29 +124,5 @@ public class VanillaPrefixTweaker : GlobalItem
                 }
             }
         }
-    }
-    
-    
-    
-    private static float WeightedDelta(float mult, float weight, bool inverse = false)
-    {
-        float delta = inverse ? (1f / mult - 1f) : (mult - 1f);
-        return delta * weight;
-    }
-    
-    // 1.00f means “1 % of this stat = 1 % price change”
-    // 0.50f ⇒ a 1 % boost adds only 0.5 % cost
-    // 2.00f ⇒ a 1 % boost adds 2 % cost
-    private static class PriceWeight {
-        public const float Damage      = 2.50f;
-        public const float UseSpeed    = 3.25f;   // (inverse of useTime)
-        public const float ShootSpeed  = 0.80f;   // bullet velocity
-        public const float Size        = 1.50f;
-        public const float Knockback   = 1.33f;
-        public const float ManaCost    = 1.22f;   // inverse
-        public const float CritChance  = 4.00f;   // +1 % crit chance
-        public const float CritDamage  = 2.22f;
-        public const float WhipRange   = 1.5f;
-        public const float WhipTagDamage = 2.66f;
     }
 }

@@ -24,8 +24,6 @@ public class SafePrefix() : SimpleAccessoryPrefixes(
     next: () => ModContent.GetInstance<PiercingPrefix>().Type,
     previous: () => ModContent.GetInstance<BluntPrefix>().Type);
 
-//TODO: 1. Fix armor pen pricing 2. Upgrade UI bugs out with accessories
-
 public class PiercingPrefix() : SimpleAccessoryPrefixes(
     level: 2,
     chainKey: "acc.armorPen",
