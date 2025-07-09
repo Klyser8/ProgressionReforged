@@ -3,37 +3,39 @@ using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.Reforge.Prefixes.Accessories;
 
-public class BluntPrefixes() : SimpleAccessoryPrefixes(
+public class EdgelessPrefix() : SimpleAccessoryPrefixes(
     level: -1,
     chainKey: "acc.armorPen",
     armorPenBonus: -3,
-    next: () => ModContent.GetInstance<EdgyPrefixes>().Type,
+    next: () => ModContent.GetInstance<BluntPrefix>().Type,
     previous: () => -1);
     
-public class EdgyPrefixes() : SimpleAccessoryPrefixes(
+public class BluntPrefix() : SimpleAccessoryPrefixes(
     level: 0,
     chainKey: "acc.armorPen",
     armorPenBonus: -2,
-    next: () => ModContent.GetInstance<PiercingPrefixes>().Type,
-    previous: () => ModContent.GetInstance<BluntPrefixes>().Type);
+    next: () => ModContent.GetInstance<SafePrefix>().Type,
+    previous: () => ModContent.GetInstance<EdgelessPrefix>().Type);
     
-public class PiercingPrefixes() : SimpleAccessoryPrefixes(
+public class SafePrefix() : SimpleAccessoryPrefixes(
     level: 1,
     chainKey: "acc.armorPen",
     armorPenBonus: -1,
-    next: () => ModContent.GetInstance<BreachingPrefixes>().Type,
-    previous: () => ModContent.GetInstance<EdgyPrefixes>().Type);
+    next: () => ModContent.GetInstance<PiercingPrefix>().Type,
+    previous: () => ModContent.GetInstance<BluntPrefix>().Type);
 
-public class BreachingPrefixes() : SimpleAccessoryPrefixes(
+//TODO: 1. Fix armor pen pricing 2. Upgrade UI bugs out with accessories
+
+public class PiercingPrefix() : SimpleAccessoryPrefixes(
     level: 2,
     chainKey: "acc.armorPen",
     armorPenBonus: 1,
-    next: () => ModContent.GetInstance<InvasivePrefixes>().Type,
-    previous: () => ModContent.GetInstance<PiercingPrefixes>().Type);
+    next: () => ModContent.GetInstance<InvasivePrefix>().Type,
+    previous: () => ModContent.GetInstance<SafePrefix>().Type);
     
-public class InvasivePrefixes() : SimpleAccessoryPrefixes(
+public class InvasivePrefix() : SimpleAccessoryPrefixes(
     level: 3,
     chainKey: "acc.armorPen",
     armorPenBonus: 2,
     next: () => -1,
-    previous: () => ModContent.GetInstance<BreachingPrefixes>().Type);
+    previous: () => ModContent.GetInstance<PiercingPrefix>().Type);

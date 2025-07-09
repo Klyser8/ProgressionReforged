@@ -356,6 +356,25 @@ internal class PrefixUpgradeUI : UIState
                             Math.Abs(GetWhipRange(tmp.prefix) - GetWhipRange(baseItem.prefix)) > 0.01 ||
                             Math.Abs(GetWhipTagDamageMult(tmp.prefix) - GetWhipTagDamageMult(baseItem.prefix)) > 0.01;
 
+            if (prefix is IAccessoryPrefixProvider accCur && PrefixLoader.GetPrefix(tmp.prefix) is IAccessoryPrefixProvider accTmp)
+            {
+                diffCurrent |= accCur.DefenseBonus != accTmp.DefenseBonus ||
+                               accCur.HealthBonus != accTmp.HealthBonus ||
+                               accCur.CritBonus != accTmp.CritBonus ||
+                               accCur.ArmorPenBonus != accTmp.ArmorPenBonus ||
+                               Math.Abs(accCur.CritDamageMult - accTmp.CritDamageMult) > 0.01f ||
+                               Math.Abs(accCur.JumpHeightMult - accTmp.JumpHeightMult) > 0.01f ||
+                               Math.Abs(accCur.KnockbackMult - accTmp.KnockbackMult) > 0.01f ||
+                               Math.Abs(accCur.DamageMult - accTmp.DamageMult) > 0.01f ||
+                               Math.Abs(accCur.ManaRegenMult - accTmp.ManaRegenMult) > 0.01f ||
+                               Math.Abs(accCur.MovementSpeedMult - accTmp.MovementSpeedMult) > 0.01f;
+
+                diffBase |= accTmp.DefenseBonus != 0 || accTmp.HealthBonus != 0 || accTmp.CritBonus != 0 || accTmp.ArmorPenBonus != 0 ||
+                            Math.Abs(accTmp.CritDamageMult - 1f) > 0.01f || Math.Abs(accTmp.JumpHeightMult - 1f) > 0.01f ||
+                            Math.Abs(accTmp.KnockbackMult - 1f) > 0.01f || Math.Abs(accTmp.DamageMult - 1f) > 0.01f ||
+                            Math.Abs(accTmp.ManaRegenMult - 1f) > 0.01f || Math.Abs(accTmp.MovementSpeedMult - 1f) > 0.01f;
+            }
+            
             if (diffCurrent && diffBase)
                 return nextType;
             if (PrefixLoader.GetPrefix(nextType) is not LeveledPrefix nextPrefix)
@@ -446,8 +465,8 @@ internal class PrefixUpgradeUI : UIState
         public const float WhipRange = 1.5f;
         public const float WhipTagDamage = 2.66f;
         public const float Defense = 1.0f;
-        public const float Health = 1.0f;
-        public const float ArmorPen = 1.0f;
+        public const float Health = 0.50f;
+        public const float ArmorPen = 2.0f;
         public const float AccessoryCritChance = 2.0f;
         public const float AccessoryCritDamage = 1.5f;
         public const float JumpHeight = 0.5f;

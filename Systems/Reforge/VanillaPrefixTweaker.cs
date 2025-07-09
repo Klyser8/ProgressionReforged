@@ -70,7 +70,7 @@ public class VanillaPrefixTweaker : GlobalItem
                     ? acc.DefenseBonusInternal * PriceWeight.Defense +
                       acc.HealthBonusInternal * PriceWeight.Health +
                       acc.CritBonusInternal / 100f * PriceWeight.AccessoryCritChance +
-                      acc.ArmorPenBonusInternal * PriceWeight.ArmorPen +
+                      (acc.ArmorPenBonusInternal + 3) * PriceWeight.ArmorPen +                  // + 3 as armor pen prefixes start with a -3 malus
                       (acc.CritDamageMultInternalAcc - 1f) * PriceWeight.AccessoryCritDamage +
                       (acc.JumpHeightMultInternal - 1f) * PriceWeight.JumpHeight +
                       (acc.KnockbackMultInternal - 1f) * PriceWeight.KnockbackResist +
@@ -91,6 +91,13 @@ public class VanillaPrefixTweaker : GlobalItem
                 3 => 3.00f,
                 _ => 1.00f
             });
+            
+            
+            // Ensure the reforge price never drops below half of the unmodified item's value
+            int minPrice = (int)(ContentSamples.ItemsByType[item.type].value * 0.5f);
+            if (reforgeCost < minPrice)
+                reforgeCost = minPrice;
+
             
             // Set the reforge price
             reforgePrice = reforgeCost;

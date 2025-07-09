@@ -94,7 +94,7 @@ Prefixes: {
 	MovementSpeedTooltip: "{0:+0;-0}% movement speed"
 	CritDamageTooltipAcc: "{0:+0;-0}% critical strike damage"
 	WhipTagDamageTooltip: "{0:+0;-0}% whip tag damage"
-	WhipRangeTooltip: "{0:+0;-0} whip range"
+	WhipRangeTooltip: "{0:+0;-0}% whip range"
 	CritDamageTooltip: "{0:+0;-0}% critical strike damage"
 	AttentivePrefix.DisplayName: Attentive
 	CloudedPrefix.DisplayName: Clouded
@@ -107,6 +107,7 @@ Prefixes: {
 	AttentivePrefixes.DisplayName: Attentive
 	BalancedPrefix.DisplayName: Balanced
 	BluntPrefixes.DisplayName: Blunt
+	BluntPrefix.DisplayName: Blunt Prefix
 	BracedPrefixes.DisplayName: Braced
 	BreachingPrefixes.DisplayName: Breaching
 	BuoyantPrefixes.DisplayName: Buoyant
@@ -126,12 +127,14 @@ Prefixes: {
 	InfusedPrefix.DisplayName: Infused
 	InstinctivePrefixes.DisplayName: Instinctive
 	InvasivePrefixes.DisplayName: Invasive
+	InvasivePrefix.DisplayName: Invasive Prefix
 	LeapingPrefixes.DisplayName: Leaping
 	LuckyPrefixes.DisplayName: Lucky
 	MenacingPrefix.DisplayName: Menacing
 	MercifulPrefixes.DisplayName: Merciful
 	PacingPrefix.DisplayName: Pacing
 	PiercingPrefixes.DisplayName: Piercing
+	PiercingPrefix.DisplayName: Piercing
 	PowerlessPrefix.DisplayName: Powerless
 	QuickPrefix.DisplayName: Quick
 	RelentlessPrefix.DisplayName: Relentless
@@ -151,6 +154,8 @@ Prefixes: {
 	WardingPrefixes.DisplayName: Warding
 	WeightedPrefixes.DisplayName: Weighted
 	WholesomePrefixes.DisplayName: Wholesome
+	EdgelessPrefix.DisplayName: Edgeless
+	SafePrefix.DisplayName: Safe
 }
 
 PrefixUpgrade: {
@@ -170,6 +175,16 @@ PrefixUpgrade: {
 	CritDamageLine: Critical strike damage:
 	WhipRangeLine: Whip range:
 	WhipTagDamageLine: Summon tag damage:
+	HealthLine: Max life: 
+	DefenseLine: Defense:
+	AccessoryCritLine: Critical strike chance:
+	ArmorPenLine: Armor penetration:
+	AccessoryDamageLine: Damage:
+	ManaRegenLine: Mana regeneration:
+	MovementSpeedLine: Movement speed:
+	JumpHeightLine: Jump height:
+	KnockbackResistLine: Knockback resistance:
+	AccessoryCritDamageLine: Critical strike damage:
 }
 
 HeavyWorkBenchTooltip: Upgrades equipment prefixes
