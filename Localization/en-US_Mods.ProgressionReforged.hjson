@@ -194,9 +194,23 @@ PrefixUpgrade: {
 
 HeavyWorkBenchTooltip: Upgrades equipment prefixes
 
+Mediumcore: {
+	ContainerHover: "{0}'s stuff, valued at {1}"
+	MapEntry: Lost Gear
+}
+
 Buffs: {
 	PrefixWhipTagDamageBuff: {
 		DisplayName: Prefix Whip Tag Damage Buff
 		Description: Mods.ProgressionReforged.Buffs.PrefixWhipTagDamageBuff.Description
 	}
 }
+
+Items: {
+	SoulboundCache: {
+		DisplayName: Soulbound Cache
+		Tooltip: ""
+	}
+}
+
+Projectiles.SoulboundCache.DisplayName: Soulbound Cache
