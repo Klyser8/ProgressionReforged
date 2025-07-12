@@ -193,6 +193,7 @@ PrefixUpgrade: {
 }
 
 HeavyWorkBenchTooltip: Upgrades equipment prefixes
+MeleeProjectileManaTooltip: Uses {0} mana to fire a projectile
 
 Mediumcore: {
 	ContainerHover: "{0}'s stuff, valued at {1}"
