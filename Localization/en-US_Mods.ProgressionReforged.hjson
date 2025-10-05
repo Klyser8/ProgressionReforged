@@ -207,11 +207,4 @@ Buffs: {
 	}
 }
 
-Items: {
-	SoulboundCache: {
-		DisplayName: Soulbound Cache
-		Tooltip: ""
-	}
-}
-
 Projectiles.SoulboundCache.DisplayName: Soulbound Cache
