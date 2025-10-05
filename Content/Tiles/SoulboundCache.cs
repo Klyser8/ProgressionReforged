@@ -13,12 +13,13 @@ public class SoulboundCache : ModTile
     public override void SetStaticDefaults()
     {
         Main.tileFrameImportant[Type] = true;
-        TileObjectData.newTile.CopyFrom(TileObjectData.Style1x2);
-        TileObjectData.newTile.Height = 3;
-        TileObjectData.newTile.Origin = new Point16(0, 2);
+        TileObjectData.newTile.Height = 1;
+        TileObjectData.newTile.Width = 3;
+        TileObjectData.newTile.DrawYOffset = 2;
         TileObjectData.newTile.CoordinateHeights = new[] { 16, 16, 16 };
         TileObjectData.addTile(Type);
 
+        DustType = DustID.Firework_Green;
         TileID.Sets.DisableSmartCursor[Type] = true;
 
         AddMapEntry(new Color(200, 200, 200), Language.GetText("Mods.ProgressionReforged.Mediumcore.MapEntry"));

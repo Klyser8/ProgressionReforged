@@ -17,19 +17,10 @@ public class SoulboundCache : ModItem
 
     public override void SetDefaults()
     {
+        Item.DefaultToPlaceableTile(ModContent.TileType<Tiles.SoulboundCache>());
         Item.width = 16;
         Item.height = 32;
         Item.maxStack = 1;
-        Item.useStyle = ItemUseStyleID.Swing;
-        Item.useAnimation = 15;
-        Item.useTime = 15;
-        Item.useTurn = true;
-        Item.consumable = true;
-    }
-    
-    public override bool CanUseItem(Player player)
-    {
-        return StoredData != null;
     }
 
     public override bool? UseItem(Player player)
