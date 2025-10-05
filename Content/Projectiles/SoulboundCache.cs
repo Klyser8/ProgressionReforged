@@ -40,10 +40,16 @@ public class SoulboundCache : ModProjectile
         if (Projectile.ai[1] == 0f)
         {
             Vector2 target = new((tileX + 0.5f) * 16f, (tileY - 2f) * 16f - 22f);
-            
+            Vector2 toTarget = target - Projectile.Center;
+            float distance = toTarget.Length();
+
             // steer towards the target each tick
-            Projectile.velocity = Projectile.DirectionTo(target) * 2f;
-            if (Vector2.Distance(Projectile.Center, target) < 4f)
+            if (distance > 4f)
+            {
+                if (distance > 0f)
+                    Projectile.velocity = toTarget / distance * 2f;
+            }
+            else
             {
                 Projectile.Center = target;
                 Projectile.velocity = Vector2.Zero;
