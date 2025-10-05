@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using ProgressionReforged.Content.Items;
 using ProgressionReforged.Content.Projectiles;
-using ProgressionReforged.Content.Tiles;
 using ProgressionReforged.Systems.Mediumcore;
 using Terraria.ID;
 using SoulboundCache = ProgressionReforged.Content.Projectiles.SoulboundCache;
@@ -54,7 +53,7 @@ internal class MediumcoreDropSystem : ModSystem
         if (_pendingSpawn)
         {
             foreach (var drop in _storedDrops)
-                SpawnContainerFromTag(drop, true);
+                SpawnContainerFromTag(drop);
 
             _pendingSpawn = false;
         }
@@ -79,33 +78,40 @@ internal class MediumcoreDropSystem : ModSystem
 
         TagCompound tag = new()
         {
+            ["id"] = Guid.NewGuid().ToString(),
+            ["origin"] = player.Center,
             ["pos"] = player.Center,
-            ["data"] = data,           
+            ["data"] = data,
             ["owner"] = player.name,
-            ["value"] = data.GetInt("value")
+            ["value"] = data.GetInt("value"),
+            ["arrived"] = false
         };
         _storedDrops.Add(tag);
         SpawnContainerFromTag(tag);
     }
 
-    internal static void SpawnContainerFromTag(TagCompound tag, bool fromWorldLoad = false)
+    internal static void SpawnContainerFromTag(TagCompound tag)
     {
-        Vector2 origin = tag.Get<Vector2>("pos");
-        int startX = (int)origin.X / 16;
-        int startY = (int)origin.Y / 16 + 1; // bottom tile coordinate
+        EnsureDropId(tag);
 
-        Point tilePos = FindSafeSpot(startX, startY);
-        int x = tilePos.X;
-        int y = tilePos.Y;
+        Vector2 storedPosition = tag.ContainsKey("pos") ? tag.Get<Vector2>("pos") : Vector2.Zero;
+        Vector2 searchOrigin = tag.ContainsKey("origin") ? tag.Get<Vector2>("origin") : storedPosition;
+        if (!tag.ContainsKey("origin"))
+            tag["origin"] = searchOrigin;
 
-        if (!WorldGen.InWorld(x, y, 1))
-            return;
+        Vector2 target;
+        if (tag.ContainsKey("target"))
+        {
+            target = tag.Get<Vector2>("target");
+        }
+        else
+        {
+            int startX = (int)searchOrigin.X / 16;
+            int startY = (int)searchOrigin.Y / 16 + 1; // bottom tile coordinate
 
-        // position the projectile so its bottom rests just above the tile top
-        Vector2 finalPos = new Vector2((x + 0.5f) * 16f, (y - 2) * 16f - 22f);
-        tag["pos"] = finalPos;
-        tag["tileX"] = x;
-        tag["tileY"] = y;
+            Point tilePos = FindSafeSpot(startX, startY);
+            int x = tilePos.X;
+            int y = tilePos.Y;
 
         Vector2 spawnPos = fromWorldLoad ? finalPos : origin;
         Vector2 velocity = Vector2.Zero;
@@ -120,16 +126,42 @@ internal class MediumcoreDropSystem : ModSystem
         if (fromWorldLoad && !Framing.GetTileSafely(x, y).HasTile)
             WorldGen.PlaceTile(x, y, ModContent.TileType<Content.Tiles.SoulboundCache>(), false, true);
 
-        int id = Projectile.NewProjectile(Entity.GetSource_NaturalSpawn(), spawnPos, velocity, ModContent.ProjectileType<SoulboundCache>(), 0, 0f);        
-        if (id < Main.maxProjectiles && id >= 0)
+        tag["pos"] = spawnPos;
+        tag["arrived"] = arrived;
+
+        Vector2 velocity = Vector2.Zero;
+        if (!arrived)
         {
-            if (Main.projectile[id].ModProjectile is SoulboundCache proj)
+            Vector2 offset = target - spawnPos;
+            float distanceSquared = offset.LengthSquared();
+            if (distanceSquared > 0f)
             {
-                proj.StoredData = tag.GetCompound("data");
-                proj.Owner = tag.GetString("owner");
-                proj.Value = tag.GetInt("value");
-                proj.tileX = x;
-                proj.tileY = y;
+                float distance = (float)Math.Sqrt(distanceSquared);
+                velocity = offset / distance * 2f;
+            }
+        }
+
+        int projIndex = Projectile.NewProjectile(Entity.GetSource_NaturalSpawn(), spawnPos, velocity, ModContent.ProjectileType<SoulboundCache>(), 0, 0f);
+        if (projIndex < 0 || projIndex >= Main.maxProjectiles)
+            return;
+
+        if (Main.projectile[projIndex].ModProjectile is SoulboundCache proj)
+        {
+            proj.StoredData = tag.GetCompound("data");
+            proj.Owner = tag.GetString("owner");
+            proj.Value = tag.GetInt("value");
+            proj.TargetPosition = target;
+            proj.DropId = tag.GetString("id");
+
+            if (arrived)
+            {
+                proj.Projectile.Center = target;
+                proj.Projectile.velocity = Vector2.Zero;
+                proj.Projectile.ai[1] = 1f;
+            }
+            else
+            {
+                proj.Projectile.ai[1] = 0f;
             }
         }
     }
@@ -174,17 +206,44 @@ internal class MediumcoreDropSystem : ModSystem
         return true;
     }
 
-    internal void RemoveDropAt(int tileX, int tileY)
+    internal void UpdateDrop(string dropId, Vector2 position, bool arrived)
     {
+        if (string.IsNullOrEmpty(dropId))
+            return;
+
         for (int i = 0; i < _storedDrops.Count; i++)
         {
-            int x = _storedDrops[i].GetInt("tileX");
-            int y = _storedDrops[i].GetInt("tileY");
-            if (x == tileX && y == tileY)
+            if (_storedDrops[i].GetString("id") == dropId)
+            {
+                _storedDrops[i]["pos"] = position;
+                _storedDrops[i]["arrived"] = arrived;
+                return;
+            }
+        }
+    }
+
+    internal void RemoveDrop(string dropId)
+    {
+        if (string.IsNullOrEmpty(dropId))
+            return;
+
+        for (int i = 0; i < _storedDrops.Count; i++)
+        {
+            if (_storedDrops[i].GetString("id") == dropId)
             {
                 _storedDrops.RemoveAt(i);
                 break;
             }
         }
+    }
+
+    private static string EnsureDropId(TagCompound tag)
+    {
+        if (tag.ContainsKey("id"))
+            return tag.GetString("id");
+
+        string id = Guid.NewGuid().ToString();
+        tag["id"] = id;
+        return id;
     }
 }
