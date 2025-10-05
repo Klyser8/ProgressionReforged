@@ -108,11 +108,14 @@ internal class MediumcoreDropSystem : ModSystem
         tag["tileY"] = y;
 
         Vector2 spawnPos = fromWorldLoad ? finalPos : origin;
-        Vector2 velocity = Vector2.Normalize(finalPos - origin);
-        if (!velocity.HasNaNs())
-            velocity *= fromWorldLoad ? 0f : 2f;
-        else
-            velocity = Vector2.Zero;
+        Vector2 velocity = Vector2.Zero;
+        if (!fromWorldLoad)
+        {
+            Vector2 offset = finalPos - origin;
+            float distance = offset.Length();
+            if (distance > 0f)
+                velocity = offset / distance * 2f;
+        }
         
         if (fromWorldLoad && !Framing.GetTileSafely(x, y).HasTile)
             WorldGen.PlaceTile(x, y, ModContent.TileType<Content.Tiles.SoulboundCache>(), false, true);
