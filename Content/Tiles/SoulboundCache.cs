@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -32,8 +33,7 @@ public class SoulboundCache : ModTile
         {
             if (proj.active && proj.type == ModContent.ProjectileType<Projectiles.SoulboundCache>())
             {
-                var mp = proj.ModProjectile as Projectiles.SoulboundCache;
-                if (mp != null && mp.tileX == i && mp.tileY == j - 2)
+                if (proj.ModProjectile is Projectiles.SoulboundCache mp && TryMatchTile(mp, i, j))
                 {
                     mp.Interact(Main.LocalPlayer);
                     return true;
@@ -50,8 +50,7 @@ public class SoulboundCache : ModTile
         {
             if (proj.active && proj.type == ModContent.ProjectileType<Projectiles.SoulboundCache>())
             {
-                var mp = proj.ModProjectile as Projectiles.SoulboundCache;
-                if (mp != null && mp.tileX == i && mp.tileY == j - 2)
+                if (proj.ModProjectile is Projectiles.SoulboundCache mp && TryMatchTile(mp, i, j))
                 {
                     string text = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.ContainerHover", mp.Owner, mp.Value);
                     Main.instance.MouseText(text);
@@ -60,5 +59,17 @@ public class SoulboundCache : ModTile
                 }
             }
         }
+    }
+
+    private static bool TryMatchTile(Projectiles.SoulboundCache cache, int i, int j)
+    {
+        Vector2 target = cache.TargetPosition;
+        if (target == Vector2.Zero && cache.Projectile.ai[1] == 0f)
+            return false;
+
+        int tileX = (int)Math.Round(target.X / 16f - 0.5f);
+        int tileY = (int)Math.Round((target.Y + 22f) / 16f + 2f);
+
+        return tileX == i && tileY == j - 2;
     }
 }

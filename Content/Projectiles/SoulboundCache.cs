@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using ProgressionReforged.Systems.MediumcoreDeath;
 using Terraria;
 using Terraria.ID;
@@ -11,9 +12,9 @@ public class SoulboundCache : ModProjectile
 {
     internal TagCompound? StoredData;
     internal string Owner = "";
-    internal int tileX;
-    internal int tileY;
     internal int Value;
+    internal Vector2 TargetPosition;
+    internal string DropId = string.Empty;
 
     public override void SetStaticDefaults()
     {
@@ -39,24 +40,26 @@ public class SoulboundCache : ModProjectile
         // movement towards safe spot
         if (Projectile.ai[1] == 0f)
         {
-            Vector2 target = new((tileX + 0.5f) * 16f, (tileY - 2f) * 16f - 22f);
-            
+            Vector2 toTarget = TargetPosition - Projectile.Center;
+            float distanceSquared = toTarget.LengthSquared();
+
             // steer towards the target each tick
-            Projectile.velocity = Projectile.DirectionTo(target) * 2f;
-            if (Vector2.Distance(Projectile.Center, target) < 4f)
+            if (distanceSquared > 16f)
             {
-                Projectile.Center = target;
-                Projectile.velocity = Vector2.Zero;
-                Projectile.ai[1] = 1f;
-                if (!Framing.GetTileSafely(tileX, tileY).HasTile)
+                if (distanceSquared > 0f)
                 {
-                    WorldGen.PlaceTile(tileX, tileY, ModContent.TileType<Tiles.SoulboundCache>(), false, true);
-                    if (Main.netMode == NetmodeID.MultiplayerClient)
-                        NetMessage.SendTileSquare(-1, tileX, tileY, 3);
-                    Main.refreshMap = true;
+                    float distance = MathF.Sqrt(distanceSquared);
+                    Projectile.velocity = toTarget / distance * 2f;
                 }
             }
+            else
+            {
+                Projectile.Center = TargetPosition;
+                Projectile.velocity = Vector2.Zero;
+                Projectile.ai[1] = 1f;
+            }
         }
+        MediumcoreDropSystem.Instance?.UpdateDrop(DropId, Projectile.Center, Projectile.ai[1] != 0f);
         // fade in/out
         if (Projectile.ai[0] == 0f)
         {
@@ -96,9 +99,8 @@ public class SoulboundCache : ModProjectile
 
         Items.SoulboundCache.RestorePlayer(player, StoredData);
         StoredData = null;
-        MediumcoreDropSystem.Instance?.RemoveDropAt(tileX, tileY);
-        for (int k = 0; k < 3; k++)
-            WorldGen.KillTile(tileX, tileY - k);
+        MediumcoreDropSystem.Instance?.RemoveDrop(DropId);
+        DropId = string.Empty;
         Projectile.ai[0] = 1f;
         Projectile.velocity = Vector2.Zero;
         for (int i = 0; i < 15; i++)
@@ -107,14 +109,7 @@ public class SoulboundCache : ModProjectile
 
     public override void Kill(int timeLeft)
     {
-        MediumcoreDropSystem.Instance?.RemoveDropAt(tileX, tileY);
-
-        for (int k = 0; k < 3; k++)
-        {
-            WorldGen.KillTile(tileX, tileY - k);
-            if (Main.netMode == NetmodeID.MultiplayerClient)
-                NetMessage.SendTileSquare(-1, tileX, tileY, 3);
-            Main.refreshMap = true;
-        }
+        MediumcoreDropSystem.Instance?.RemoveDrop(DropId);
+        DropId = string.Empty;
     }
 }
