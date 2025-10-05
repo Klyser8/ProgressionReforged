@@ -113,15 +113,18 @@ internal class MediumcoreDropSystem : ModSystem
             int x = tilePos.X;
             int y = tilePos.Y;
 
-            if (!WorldGen.InWorld(x, y, 1))
-                return;
-
-            target = new Vector2((x + 0.5f) * 16f, (y - 2) * 16f - 22f);
-            tag["target"] = target;
+        Vector2 spawnPos = fromWorldLoad ? finalPos : origin;
+        Vector2 velocity = Vector2.Zero;
+        if (!fromWorldLoad)
+        {
+            Vector2 offset = finalPos - origin;
+            float distance = offset.Length();
+            if (distance > 0f)
+                velocity = offset / distance * 2f;
         }
-
-        bool arrived = tag.ContainsKey("arrived") && tag.GetBool("arrived");
-        Vector2 spawnPos = arrived ? target : storedPosition;
+        
+        if (fromWorldLoad && !Framing.GetTileSafely(x, y).HasTile)
+            WorldGen.PlaceTile(x, y, ModContent.TileType<Content.Tiles.SoulboundCache>(), false, true);
 
         tag["pos"] = spawnPos;
         tag["arrived"] = arrived;
