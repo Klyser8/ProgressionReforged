@@ -197,6 +197,7 @@ HeavyWorkBenchTooltip: Upgrades equipment prefixes
 Mediumcore: {
 	ContainerHover: "{0}'s stuff, valued at {1}"
 	MapEntry: Lost Gear
+	SoulboundCacheTraveling: Traveling
 }
 
 Buffs: {

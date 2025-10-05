@@ -16,6 +16,7 @@ internal class MediumcoreDropSystem : ModSystem
     internal static MediumcoreDropSystem? Instance;
 
     private readonly List<TagCompound> _storedDrops = new();
+    internal IReadOnlyList<TagCompound> StoredDrops => _storedDrops;
     private bool _pendingSpawn;
 
     public override void OnWorldLoad()
