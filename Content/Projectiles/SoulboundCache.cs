@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Text;
 using Microsoft.Xna.Framework;
 using ProgressionReforged.Systems.MediumcoreDeath;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -10,6 +12,31 @@ namespace ProgressionReforged.Content.Projectiles;
 
 public class SoulboundCache : ModProjectile
 {
+    private static readonly string[] CoinTextKeys =
+    {
+        "LegacyInterface.18",
+        "LegacyInterface.17",
+        "LegacyInterface.16",
+        "LegacyInterface.15"
+    };
+
+    private static readonly string[] CoinFallbackNames =
+    {
+        "Copper",
+        "Silver",
+        "Gold",
+        "Platinum"
+    };
+
+    private static readonly Color[] CoinColors =
+    {
+        Colors.CoinCopper,
+        Colors.CoinSilver,
+        Colors.CoinGold,
+        Colors.CoinPlatinum
+    };
+
+    
     internal TagCompound? StoredData;
     internal string Owner = "";
     internal int Value;
@@ -189,5 +216,64 @@ public class SoulboundCache : ModProjectile
                 PlaceItem(player, ref player.Loadouts[l].Dye[i], item);
             }
         }
+    }
+    
+    internal static string BuildHoverText(string owner, long value, bool hasArrived)
+    {
+        string cacheName = Language.GetTextValue("Mods.ProgressionReforged.Projectiles.SoulboundCache.DisplayName");
+        if (string.IsNullOrWhiteSpace(cacheName))
+            cacheName = "Soulbound Cache";
+
+        string ownerText;
+        if (string.IsNullOrWhiteSpace(owner))
+        {
+            ownerText = cacheName;
+        }
+        else
+        {
+            string localizedOwner = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.SoulboundCacheOwnerFormat", owner, cacheName);
+            ownerText = string.IsNullOrWhiteSpace(localizedOwner) ? $"{owner}'s {cacheName}" : localizedOwner;
+        }
+
+        if (!hasArrived)
+        {
+            string travelingText = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.SoulboundCacheTraveling");
+            ownerText += string.IsNullOrWhiteSpace(travelingText) ? " (Traveling)" : $" ({travelingText})";
+        }
+
+        string coins = FormatCoinValue(value);
+        string valueText = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.SoulboundCacheValueLabel", coins);
+        if (string.IsNullOrWhiteSpace(valueText))
+            valueText = $"Value: {coins}";
+
+        string hoverText = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.ContainerHover", ownerText, valueText);
+        if (string.IsNullOrWhiteSpace(hoverText))
+            hoverText = $"{ownerText}\n{valueText}";
+
+        return hoverText;
+    }
+
+    private static string FormatCoinValue(long value)
+    {
+        int[] coins = Utils.CoinsSplit(value);
+        var builder = new StringBuilder();
+
+        for (int i = 3; i >= 0; i--)
+        {
+            if (coins[i] == 0)
+            {
+                continue;
+            }
+            if (builder.Length > 0)
+                builder.Append(' ');
+
+            string coinName = Language.GetTextValue(CoinTextKeys[i]);
+            if (string.IsNullOrWhiteSpace(coinName))
+                coinName = CoinFallbackNames[i];
+
+            builder.Append($"[c/{CoinColors[i].Hex3()}:{coins[i]} {coinName}]");
+        }
+
+        return builder.ToString();
     }
 }

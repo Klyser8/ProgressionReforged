@@ -195,9 +195,15 @@ PrefixUpgrade: {
 HeavyWorkBenchTooltip: Upgrades equipment prefixes
 
 Mediumcore: {
-	ContainerHover: "{0}'s stuff, valued at {1}"
+	ContainerHover:
+		'''
+		{0}
+		{1}
+		'''
 	MapEntry: Lost Gear
 	SoulboundCacheTraveling: Traveling
+	SoulboundCacheOwnerFormat: "{0}'s {1}"
+	SoulboundCacheValueLabel: Value: {0}
 }
 
 Buffs: {

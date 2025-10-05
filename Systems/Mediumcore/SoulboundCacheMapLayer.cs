@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ProgressionReforged.Content.Projectiles;
 using ProgressionReforged.Systems.MediumcoreDeath;
 using ReLogic.Content;
 using Terraria;
@@ -52,6 +53,7 @@ public class SoulboundCacheMapLayer : ModMapLayer
 
             bool arrived = drop.ContainsKey("arrived") && drop.GetBool("arrived");
             string owner = drop.ContainsKey("owner") ? drop.GetString("owner") : string.Empty;
+            int value = drop.ContainsKey("value") ? drop.GetInt("value") : 0;
 
             // Color color = arrived ? Color.White : Color.White * 0.6f;
             // if (!string.IsNullOrEmpty(owner) && Main.LocalPlayer.name == owner)
@@ -60,18 +62,7 @@ public class SoulboundCacheMapLayer : ModMapLayer
             MapOverlayDrawContext.DrawResult drawResult = context.Draw(icon.Value, mapPosition, Alignment.Center);
             if (drawResult.IsMouseOver)
             {
-                string cacheName = Language.GetTextValue("Mods.ProgressionReforged.Projectiles.SoulboundCache.DisplayName");
-                if (string.IsNullOrWhiteSpace(cacheName))
-                    cacheName = "Soulbound Cache";
-                string ownerText = string.IsNullOrWhiteSpace(owner) ? cacheName : $"{owner}'s {cacheName}";
-
-                if (!arrived)
-                {
-                    string travelingText = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.SoulboundCacheTraveling");
-                    ownerText += string.IsNullOrWhiteSpace(travelingText) ? " (Traveling)" : $" ({travelingText})";
-                }
-
-                text = ownerText;
+                text = SoulboundCache.BuildHoverText(owner, value, arrived);
             }
         }
     }

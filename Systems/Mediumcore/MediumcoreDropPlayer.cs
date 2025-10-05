@@ -34,11 +34,11 @@ internal class MediumcoreDropPlayer : ModPlayer
             if (!proj.active || proj.type != ModContent.ProjectileType<SoulboundCache>())
                 continue;
 
-            if (proj.Hitbox.Contains(mouse) && Vector2.Distance(Player.Center, proj.Center) <= 200f)
+            if (proj.Hitbox.Contains(mouse) && Vector2.Distance(Player.Center, proj.Center) <= 80f)
             {
                 if (proj.ModProjectile is SoulboundCache mp)
                 {
-                    string text = Language.GetTextValue("Mods.ProgressionReforged.Mediumcore.ContainerHover", mp.Owner, mp.Value);
+                    string text = SoulboundCache.BuildHoverText(mp.Owner, mp.Value, proj.ai[1] != 0f);
                     Main.instance.MouseText(text);
                     Player.noThrow = 2;
 
