@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using ProgressionReforged.Systems.MediumcoreDeath;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -124,7 +125,19 @@ public class SoulboundCache : ModProjectile
         if (StoredData == null || Projectile.ai[1] == 0f)
             return;
 
-        RestorePlayer(player, StoredData);
+        bool inventoryFull = true;
+        for (int i = 0; i < player.inventory.Length; i++)
+        {
+            if (player.inventory[i].IsAir)
+            {
+                inventoryFull = false;
+                break;
+            }
+        }
+
+        IEntitySource restoreSource = player.GetSource_Misc("MediumcoreContainer");
+
+        RestorePlayer(player, StoredData, inventoryFull, restoreSource);
         StoredData = null;
         MediumcoreDropSystem.Instance?.RemoveDrop(DropId);
         DropId = string.Empty;
@@ -140,7 +153,7 @@ public class SoulboundCache : ModProjectile
         DropId = string.Empty;
     }
     
-    private static void PlaceItem(Player player, ref Item slot, Item item)
+    private static void PlaceItem(Player player, ref Item slot, Item item, bool dropToGround, IEntitySource source)
     {
         if (item.IsAir)
             return;
@@ -165,7 +178,18 @@ public class SoulboundCache : ModProjectile
         }
 
 
-        player.QuickSpawnClonedItem(player.GetSource_Misc("MediumcoreContainer"), item);
+        if (dropToGround)
+        {
+            Item? spawnedItem = player.QuickSpawnClonedItemDirect(source, item);
+            if (spawnedItem != null)
+            {
+                spawnedItem.velocity = Main.rand.NextVector2Circular(2f, 2f);
+            }
+
+            return;
+        }
+
+        player.QuickSpawnClonedItem(source, item);
         
     }
     
@@ -176,27 +200,27 @@ public class SoulboundCache : ModProjectile
                item.type == ItemID.CopperShortsword;
     }
     
-    internal static void RestorePlayer(Player player, TagCompound data)
+    internal static void RestorePlayer(Player player, TagCompound data, bool dropToGround, IEntitySource source)
     {
         var inv = data.GetList<TagCompound>("inventory");
         for (int i = 0; i < inv.Count && i < player.inventory.Length; i++)
         {
             var item = ItemIO.Load(inv[i]);
-            PlaceItem(player, ref player.inventory[i], item);
+            PlaceItem(player, ref player.inventory[i], item, dropToGround, source);
         }
 
         var misc = data.GetList<TagCompound>("miscEquips");
         for (int i = 0; i < misc.Count && i < player.miscEquips.Length; i++)
         {
             var item = ItemIO.Load(misc[i]);
-            PlaceItem(player, ref player.miscEquips[i], item);
+            PlaceItem(player, ref player.miscEquips[i], item, dropToGround, source);
         }
 
         var miscD = data.GetList<TagCompound>("miscDyes");
         for (int i = 0; i < miscD.Count && i < player.miscDyes.Length; i++)
         {
             var item = ItemIO.Load(miscD[i]);
-            PlaceItem(player, ref player.miscDyes[i], item);
+            PlaceItem(player, ref player.miscDyes[i], item, dropToGround, source);
         }
 
         var loadouts = data.GetList<TagCompound>("loadouts");
@@ -207,13 +231,13 @@ public class SoulboundCache : ModProjectile
             for (int i = 0; i < armor.Count && i < player.Loadouts[l].Armor.Length; i++)
             {
                 var item = ItemIO.Load(armor[i]);
-                PlaceItem(player, ref player.Loadouts[l].Armor[i], item);
+                PlaceItem(player, ref player.Loadouts[l].Armor[i], item, dropToGround, source);
             }
             var dye = lt.GetList<TagCompound>("dye");
             for (int i = 0; i < dye.Count && i < player.Loadouts[l].Dye.Length; i++)
             {
                 var item = ItemIO.Load(dye[i]);
-                PlaceItem(player, ref player.Loadouts[l].Dye[i], item);
+                PlaceItem(player, ref player.Loadouts[l].Dye[i], item, dropToGround, source);
             }
         }
     }
