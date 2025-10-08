@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -120,8 +121,9 @@ public class HookTooltipGlobalItem : GlobalItem
         return speedPixelsPerFrame * 60f / 16f;
     }
 
-    private static T[] TryGetProjectileSet<T>(params string[] possibleNames) where T : struct, IConvertible
+    private static T[] TryGetProjectileSet<T>(params string[] possibleNames) where T : struct
     {
+        Type elementType = typeof(T);
         Type? setsType = typeof(ProjectileID).GetNestedType("Sets", BindingFlags.Public | BindingFlags.NonPublic);
         if (setsType is null)
             return Array.Empty<T>();
@@ -129,62 +131,22 @@ public class HookTooltipGlobalItem : GlobalItem
         foreach (string name in possibleNames)
         {
             FieldInfo? field = setsType.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-            if (field is null)
+            if (field is null || !field.FieldType.IsArray || field.FieldType.GetElementType() != elementType)
                 continue;
 
-            if (TryGetFieldArray(field, out T[] typedArray))
+            if (field.GetValue(null) is T[] typedArray)
                 return typedArray;
         }
 
-        foreach (FieldInfo field in setsType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
-        {
-            if (!field.FieldType.IsArray || !field.Name.Contains("Grapple", StringComparison.OrdinalIgnoreCase))
-                continue;
+        // fall back to the first array field that loosely matches the element type and name contains "Grapple"
+        FieldInfo? fallback = setsType
+            .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
+            .FirstOrDefault(f => f.FieldType.IsArray && f.FieldType.GetElementType() == elementType && f.Name.Contains("Grapple", StringComparison.OrdinalIgnoreCase));
 
-            if (TryGetFieldArray(field, out T[] fallbackArray))
-                return fallbackArray;
-        }
+        if (fallback?.GetValue(null) is T[] fallbackArray)
+            return fallbackArray;
 
         return Array.Empty<T>();
-    }
-
-    private static bool TryGetFieldArray<T>(FieldInfo field, out T[] result) where T : struct, IConvertible
-    {
-        if (!field.FieldType.IsArray)
-        {
-            result = Array.Empty<T>();
-            return false;
-        }
-
-        if (field.GetValue(null) is not Array array)
-        {
-            result = Array.Empty<T>();
-            return false;
-        }
-
-        if (array is T[] typed)
-        {
-            result = typed;
-            return true;
-        }
-
-        Type? sourceElement = array.GetType().GetElementType();
-        if (sourceElement is null || !typeof(IConvertible).IsAssignableFrom(sourceElement) || !typeof(IConvertible).IsAssignableFrom(typeof(T)))
-        {
-            result = Array.Empty<T>();
-            return false;
-        }
-
-        int length = array.Length;
-        var converted = new T[length];
-        for (int i = 0; i < length; i++)
-        {
-            object? value = array.GetValue(i);
-            converted[i] = value is null ? default : (T)Convert.ChangeType(value, typeof(T));
-        }
-
-        result = converted;
-        return true;
     }
 
     private static float? TryGetArrayValue(float[] values, int index)
