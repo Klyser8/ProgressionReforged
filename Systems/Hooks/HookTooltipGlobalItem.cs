@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.ID;
@@ -10,10 +9,10 @@ namespace ProgressionReforged.Systems.Hooks;
 
 public class HookTooltipGlobalItem : GlobalItem
 {
-    private static readonly float[] GrappleRanges = TryGetProjectileSet<float>("GrappleRange", "GrappleRanges", "HookRange");
-    private static readonly float[] GrapplePullSpeeds = TryGetProjectileSet<float>("GrapplePullSpeed", "GrapplePullSpeeds");
-    private static readonly float[] GrappleLaunchSpeeds = TryGetProjectileSet<float>("GrappleThrowSpeed", "GrappleLaunchSpeed", "GrappleThrowSpeeds");
-    private static readonly int[] GrappleHookCounts = TryGetProjectileSet<int>("GrappleNumHooks", "GrappleHookCounts", "GrappleHookNumbers");
+    private static float[] _cachedGrappleRanges = Array.Empty<float>();
+    private static float[] _cachedGrapplePullSpeeds = Array.Empty<float>();
+    private static float[] _cachedGrappleLaunchSpeeds = Array.Empty<float>();
+    private static int[] _cachedGrappleHookCounts = Array.Empty<int>();
 
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
@@ -76,7 +75,8 @@ public class HookTooltipGlobalItem : GlobalItem
             return true;
         }
 
-        float? fromArray = TryGetArrayValue(GrappleRanges, projectileType);
+        float[] ranges = GetProjectileSet(ref _cachedGrappleRanges, projectileType, "GrappleRange", "GrappleRanges", "HookRange");
+        float? fromArray = TryGetArrayValue(ranges, projectileType);
         if (fromArray.HasValue)
         {
             float value = fromArray.Value;
@@ -90,7 +90,8 @@ public class HookTooltipGlobalItem : GlobalItem
 
     private static bool TryGetPullTilesPerSecond(int projectileType, out float pullTilesPerSecond)
     {
-        float? value = TryGetArrayValue(GrapplePullSpeeds, projectileType);
+        float[] pullSpeeds = GetProjectileSet(ref _cachedGrapplePullSpeeds, projectileType, "GrapplePullSpeed", "GrapplePullSpeeds");
+        float? value = TryGetArrayValue(pullSpeeds, projectileType);
         if (value.HasValue && value.Value > 0f)
         {
             pullTilesPerSecond = value.Value * 60f / 16f;
@@ -103,27 +104,28 @@ public class HookTooltipGlobalItem : GlobalItem
 
     private static bool TryGetHookCount(int projectileType, out int count)
     {
-        int? value = TryGetArrayValue(GrappleHookCounts, projectileType);
+        int[] hookCounts = GetProjectileSet(ref _cachedGrappleHookCounts, projectileType, "GrappleNumHooks", "GrappleHookCounts", "GrappleHookNumbers");
+        int? value = TryGetArrayValue(hookCounts, projectileType);
         if (value.HasValue && value.Value > 0)
         {
             count = value.Value;
             return true;
         }
 
-        count = 0;
-        return false;
+        count = 1;
+        return true;
     }
 
     private static float GetLaunchTilesPerSecond(Item item)
     {
-        float? value = TryGetArrayValue(GrappleLaunchSpeeds, item.shoot);
+        float[] launchSpeeds = GetProjectileSet(ref _cachedGrappleLaunchSpeeds, item.shoot, "GrappleThrowSpeed", "GrappleLaunchSpeed", "GrappleThrowSpeeds");
+        float? value = TryGetArrayValue(launchSpeeds, item.shoot);
         float speedPixelsPerFrame = value.HasValue && value.Value > 0f ? value.Value : item.shootSpeed;
         return speedPixelsPerFrame * 60f / 16f;
     }
 
-    private static T[] TryGetProjectileSet<T>(params string[] possibleNames) where T : struct
+    private static T[] TryGetProjectileSet<T>(params string[] possibleNames) where T : struct, IConvertible
     {
-        Type elementType = typeof(T);
         Type? setsType = typeof(ProjectileID).GetNestedType("Sets", BindingFlags.Public | BindingFlags.NonPublic);
         if (setsType is null)
             return Array.Empty<T>();
@@ -131,22 +133,80 @@ public class HookTooltipGlobalItem : GlobalItem
         foreach (string name in possibleNames)
         {
             FieldInfo? field = setsType.GetField(name, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
-            if (field is null || !field.FieldType.IsArray || field.FieldType.GetElementType() != elementType)
+            if (field is null)
                 continue;
 
-            if (field.GetValue(null) is T[] typedArray)
+            if (TryGetFieldArray(field, out T[] typedArray))
                 return typedArray;
         }
 
-        // fall back to the first array field that loosely matches the element type and name contains "Grapple"
-        FieldInfo? fallback = setsType
-            .GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
-            .FirstOrDefault(f => f.FieldType.IsArray && f.FieldType.GetElementType() == elementType && f.Name.Contains("Grapple", StringComparison.OrdinalIgnoreCase));
+        foreach (FieldInfo field in setsType.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
+        {
+            if (!field.FieldType.IsArray || !field.Name.Contains("Grapple", StringComparison.OrdinalIgnoreCase))
+                continue;
 
-        if (fallback?.GetValue(null) is T[] fallbackArray)
-            return fallbackArray;
+            if (TryGetFieldArray(field, out T[] fallbackArray))
+                return fallbackArray;
+        }
 
         return Array.Empty<T>();
+    }
+
+    private static bool TryGetFieldArray<T>(FieldInfo field, out T[] result) where T : struct, IConvertible
+    {
+        if (!field.FieldType.IsArray)
+        {
+            result = Array.Empty<T>();
+            return false;
+        }
+
+        if (field.GetValue(null) is not Array array)
+        {
+            result = Array.Empty<T>();
+            return false;
+        }
+
+        if (array is T[] typed)
+        {
+            result = typed;
+            return true;
+        }
+
+        Type? sourceElement = array.GetType().GetElementType();
+        if (sourceElement is null || !typeof(IConvertible).IsAssignableFrom(sourceElement) || !typeof(IConvertible).IsAssignableFrom(typeof(T)))
+        {
+            result = Array.Empty<T>();
+            return false;
+        }
+
+        int length = array.Length;
+        var converted = new T[length];
+        for (int i = 0; i < length; i++)
+        {
+            object? value = array.GetValue(i);
+            converted[i] = value is null ? default : (T)Convert.ChangeType(value, typeof(T));
+        }
+
+        result = converted;
+        return true;
+    }
+
+    private static T[] GetProjectileSet<T>(ref T[] cache, int requiredIndex, params string[] possibleNames) where T : struct, IConvertible
+    {
+        if (cache.Length > requiredIndex && cache.Length != 0)
+            return cache;
+
+        T[] fetched = TryGetProjectileSet<T>(possibleNames);
+        if (fetched.Length > requiredIndex)
+        {
+            cache = fetched;
+            return cache;
+        }
+
+        if (cache.Length == 0 && fetched.Length > 0)
+            cache = fetched;
+
+        return cache;
     }
 
     private static float? TryGetArrayValue(float[] values, int index)
