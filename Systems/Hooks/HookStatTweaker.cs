@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
@@ -9,56 +8,6 @@ namespace ProgressionReforged.Systems.Hooks;
 
 public class HookStatTweaker : GlobalProjectile
 {
-    // 1) Single-type hooks:
-    //    Key = (oldRange, projectileID), Value = newRange
-    //    This handles lines like: if (num3 > 350f && type == 256) ...
-    //    or if (num3 > 440f && type == 73), etc.
-    private static readonly Dictionary<(float oldRange, int projID), float> SingleHookRanges = new()
-    {
-        { (350f, 256), 20f * 16f }, // Skeletron Hand
-        { (400f, 372), 19f * 16f }, // Fish Hook
-        { (300f, 865), 21f * 16f }, // Squirrel
-        { (440f, 73),  26f * 16f }, // Dual Hook
-        { (440f, 74),  26f * 16f }, // Dual Hook
-        { (400f, 32),  22f * 16f }, // Ivy Whip
-        { (500f, 935), 23f * 16f }, // Dissonance Hook
-        // The next four are actually part of the multi-type block (486..489),
-        // so they won't match "type == 486" in vanilla. We'll handle them below:
-        //   (480f, 486) => 24f * 16f, etc.
-        // We'll skip them here, or you can keep them if you want to try matching
-        // something else. But typically it won't match because the check is "type >= 486 && <= 489".
-        { (550f, 332), 29f * 16f }, // Christmas Hook
-        { (550f, 322), 29f * 16f }, // Halloween Hook
-    };
-
-    // 2) Gem hooks (230..235) => vanilla does: num8 = 300 + (type - 230)*30
-    private static readonly Dictionary<int, int> GemHookRanges = new()
-    {
-        [230] = (int)(19.5f * 16f), // Amethyst
-        [231] = (int)(20.25f * 16f),
-        [232] = (int)(21.25f * 16f),
-        [233] = (int)(22.25f * 16f),
-        [234] = (int)(23.5f * 16f),
-        [235] = (int)(25f * 16f),
-    };
-
-    // 3) Amber Hook => if (type == 753) { int num9 = 420; if (num3 > (float)num9) ... }
-    private const int AmberVanilla = 420;
-    private const int AmberNew     = (int)(23f * 16f); // 368
-
-    // 4) Multi-type block for Tendon (488), Illuminant (486), Worm (489), Thorn (487).
-    //    Vanilla code is: if (num3 > 480f && type >= 486 && type <= 489) { ... }
-    //    If you want them all the same distance, just replace 480f with e.g. 384.
-    //    If you want them each different, you must do a small injection that picks
-    //    a different "limit" per type. We'll show how below.
-    private static readonly Dictionary<int, float> MultiHookRanges = new()
-    {
-        [486] = 24f * 16f, // Illuminant Hook
-        [487] = 27f * 16f, // Thorn Hook
-        [488] = 24f * 16f, // Tendon Hook
-        [489] = 24f * 16f, // Worm Hook
-    };
-
     public override void Load()
     {
         // We hook the full Projectile.AI to ensure we see all grappling checks
@@ -79,7 +28,7 @@ public class HookStatTweaker : GlobalProjectile
         //   - Then we move c.Index forward a bit so we don't re-match the same
         //     location over and over, and continue searching until no more matches.
         //
-        foreach (var ((oldRange, projId), newRange) in SingleHookRanges)
+        foreach (var ((oldRange, projId), newRange) in HookStatData.SingleHookRanges)
         {
             // reset c.Index to 0 so each dictionary entry can match from top to bottom
             c.Index = 0;
@@ -132,7 +81,7 @@ public class HookStatTweaker : GlobalProjectile
             // now inject our own code to set that local variable (num8).
             c.Emit(OpCodes.Ldarg_0); // push 'this' (the Projectile)
             c.EmitDelegate<Func<Projectile, int>>(proj => {
-                if (GemHookRanges.TryGetValue(proj.type, out int customDist))
+                if (HookStatData.GemHookRanges.TryGetValue(proj.type, out int customDist))
                     return customDist;
                 // fallback vanilla logic
                 return 300 + (proj.type - 230) * 30;
@@ -154,7 +103,7 @@ public class HookStatTweaker : GlobalProjectile
             i => i.MatchLdcI4(753),
             i => i.MatchBneUn(out _),
 
-            i => i.MatchLdcI4(AmberVanilla),  // = 420
+            i => i.MatchLdcI4(HookStatData.AmberVanilla),  // = 420
             i => i.MatchStloc(out int localNum9)
         ))
         {
@@ -162,7 +111,7 @@ public class HookStatTweaker : GlobalProjectile
             // We want to land on "ldc.i4 420". That is instruction #4 from the start.
             // Actually, indices: 0=ldarg(0),1=ldfld,2=ldc.i4(753),3=bne.un,4=ldc.i4(420),5=stloc
             c.Index += 4; // now c.Next is the "ldc.i4(420)" instruction
-            c.Next.Operand = AmberNew; // 368
+            c.Next.Operand = HookStatData.AmberNew; // 368
         }
         #endregion
 
@@ -239,7 +188,7 @@ public class HookStatTweaker : GlobalProjectile
             c.EmitDelegate<Func<Projectile, float, bool>>((proj, distance) => {
                 // If type is in [486..489], pick from our dictionary:
                 if (proj.type >= 486 && proj.type <= 489) {
-                    float required = MultiHookRanges.TryGetValue(proj.type, out float customDist)
+                    float required = HookStatData.MultiHookRanges.TryGetValue(proj.type, out float customDist)
                                      ? customDist
                                      : 480f; // fallback
                     return distance > required;
