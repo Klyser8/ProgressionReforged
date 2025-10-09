@@ -214,3 +214,65 @@ Buffs: {
 }
 
 Projectiles.SoulboundCache.DisplayName: Soulbound Cache
+
+Configs: {
+	ProgressionReforgedConfig: {
+		Headers: {
+			Life_Crystal_Availability: Life_ Crystal_ Availability Header
+			Life_Crystal_Costs: Life_ Crystal_ Costs Header
+			Boss_Life_Crystal_Rewards: Boss_ Life_ Crystal_ Rewards Header
+		}
+
+		DisplayName: Progression Reforged Config
+
+		InitialLifeCrystalMultiplier: {
+			Label: Initial_Life_crystal_density_multiplier
+			Tooltip: ""
+		}
+
+		LifeCrystalBaseCost: {
+			Label: Base_life_crystal_cost_per_heart
+			Tooltip: ""
+		}
+
+		LifeCrystalCostIncreaseFrequency: {
+			Label: Hearts_added_before_cost_increases
+			Tooltip: How_many_heart_upgrades_share_the_same_cost_before_the_cost_increases_again.
+		}
+
+		LifeCrystalCostIncreaseAmount: {
+			Label: Additional_crystals_added_to_the_cost_each_step
+			Tooltip: ""
+		}
+
+		KingSlimeLifeCrystals: {
+			Label: King_Slime_reward_crystals
+			Tooltip: ""
+		}
+
+		EyeOfCthulhuLifeCrystals: {
+			Label: Eye_of_Cthulhu_reward_crystals
+			Tooltip: ""
+		}
+
+		EvilBossLifeCrystals: {
+			Label: Evil_Boss_reward_crystals
+			Tooltip: ""
+		}
+
+		QueenBeeLifeCrystals: {
+			Label: Queen_Bee_reward_crystals
+			Tooltip: ""
+		}
+
+		DeerclopsLifeCrystals: {
+			Label: Deerclops_reward_crystals
+			Tooltip: ""
+		}
+
+		SkeletronLifeCrystals: {
+			Label: Skeletron_reward_crystals
+			Tooltip: ""
+		}
+	}
+}

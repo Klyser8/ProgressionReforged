@@ -18,7 +18,8 @@ public class AccessoryPrefixGlobalItem : GlobalItem
             player.manaRegenBonus += (int)((p.ManaRegenMult - 1f) * 100f);
             player.moveSpeed *= p.MovementSpeedMult;
             player.accRunSpeed *= p.MovementSpeedMult;
-            player.jumpSpeedBoost += p.JumpHeightMult - 1f;
+            float baseJumpSpeed = Player.jumpSpeed + player.jumpSpeedBoost;
+            player.jumpSpeedBoost += baseJumpSpeed * (p.JumpHeightMult - 1f);
             // The float kept in KnockbackReductionModPlayer needs to be modified accordingly
             if (player.TryGetModPlayer(out KnockbackReductionModPlayer knockbackPlayer))
             {

@@ -46,4 +46,16 @@ public abstract class LeveledPrefix(int level, string chainKey) : ModPrefix
 
    // Level getter
    public int GetLevel() => Level;
+   
+   
+   public override bool CanRoll(Item item)
+   {
+      if (!base.CanRoll(item))
+         return false;
+
+      if (VanillaPrefixTweaker.BypassLevelCheck)
+         return true;
+
+      return Level is >= -1 and <= 1;
+   }
 }
