@@ -214,3 +214,15 @@ Buffs: {
 }
 
 Projectiles.SoulboundCache.DisplayName: Soulbound Cache
+
+LifeCrystals: {
+        NotEnough: You need {0} life crystal(s) to increase your max life.
+        BossReward: {0} new life crystal(s) have formed underground!
+        Tooltip: {
+                NextCost: Next heart requires {0} life crystal(s). You have {1}.
+        }
+        Command: {
+                WorldCount: There are {0} life crystals in the world.
+                NextCost: Your next heart requires {0} life crystal(s). You have {1}.
+        }
+}

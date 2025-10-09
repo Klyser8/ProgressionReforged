@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace ProgressionReforged.Systems.LifeCrystals;
@@ -28,7 +30,18 @@ internal sealed class LifeCrystalGlobalItem : GlobalItem
         player.GetModPlayer<LifeCrystalPlayer>().PendingLifeCrystalCost = required;
         int available = player.CountItem(ItemID.LifeCrystal);
 
-        return available >= required;
+        if (available >= required)
+        {
+            return true;
+        }
+
+        if (player.whoAmI == Main.myPlayer && Main.netMode != NetmodeID.Server)
+        {
+            string message = Language.GetTextValue("Mods.ProgressionReforged.LifeCrystals.NotEnough", required);
+            Main.NewText(message, 255, 240, 20);
+        }
+
+        return false;
     }
 
     public override void OnConsumeItem(Item item, Player player)
@@ -47,5 +60,25 @@ internal sealed class LifeCrystalGlobalItem : GlobalItem
         }
 
         player.ConsumeItem(ItemID.LifeCrystal, required);
+    }
+
+    public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
+    {
+        if (item.type != ItemID.LifeCrystal)
+        {
+            return;
+        }
+
+        Player player = Main.LocalPlayer;
+        if (player is null)
+        {
+            return;
+        }
+
+        int required = LifeCrystalSystem.GetLifeCrystalCostForNextHeart(player);
+        int available = player.CountItem(ItemID.LifeCrystal);
+
+        string text = Language.GetTextValue("Mods.ProgressionReforged.LifeCrystals.Tooltip.NextCost", required, available);
+        tooltips.Add(new TooltipLine(Mod, "ProgressionReforged_LifeCrystalCost", text));
     }
 }

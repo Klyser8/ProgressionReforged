@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.Chat;
 using Terraria.DataStructures;
+using Terraria.Enums;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using Terraria.Utilities;
@@ -11,19 +15,37 @@ namespace ProgressionReforged.Systems.LifeCrystals;
 
 internal sealed class LifeCrystalSystem : ModSystem
 {
-    private bool _kingSlimeRewardGiven;
-    private bool _eyeOfCthulhuRewardGiven;
-    private bool _eaterOfWorldsRewardGiven;
-    private bool _brainOfCthulhuRewardGiven;
-    private bool _skeletronRewardGiven;
+    private bool _kingSlimeRewardUnlocked;
+    private int _kingSlimePendingCrystals;
+
+    private bool _eyeOfCthulhuRewardUnlocked;
+    private int _eyeOfCthulhuPendingCrystals;
+
+    private bool _eaterOfWorldsRewardUnlocked;
+    private int _eaterOfWorldsPendingCrystals;
+
+    private bool _brainOfCthulhuRewardUnlocked;
+    private int _brainOfCthulhuPendingCrystals;
+
+    private bool _skeletronRewardUnlocked;
+    private int _skeletronPendingCrystals;
 
     public override void OnWorldLoad()
     {
-        _kingSlimeRewardGiven = false;
-        _eyeOfCthulhuRewardGiven = false;
-        _eaterOfWorldsRewardGiven = false;
-        _brainOfCthulhuRewardGiven = false;
-        _skeletronRewardGiven = false;
+        _kingSlimeRewardUnlocked = false;
+        _kingSlimePendingCrystals = 0;
+
+        _eyeOfCthulhuRewardUnlocked = false;
+        _eyeOfCthulhuPendingCrystals = 0;
+
+        _eaterOfWorldsRewardUnlocked = false;
+        _eaterOfWorldsPendingCrystals = 0;
+
+        _brainOfCthulhuRewardUnlocked = false;
+        _brainOfCthulhuPendingCrystals = 0;
+
+        _skeletronRewardUnlocked = false;
+        _skeletronPendingCrystals = 0;
     }
 
     public override void OnWorldUnload()
@@ -33,20 +55,73 @@ internal sealed class LifeCrystalSystem : ModSystem
 
     public override void LoadWorldData(TagCompound tag)
     {
-        _kingSlimeRewardGiven = tag.GetBool(nameof(_kingSlimeRewardGiven));
-        _eyeOfCthulhuRewardGiven = tag.GetBool(nameof(_eyeOfCthulhuRewardGiven));
-        _eaterOfWorldsRewardGiven = tag.GetBool(nameof(_eaterOfWorldsRewardGiven));
-        _brainOfCthulhuRewardGiven = tag.GetBool(nameof(_brainOfCthulhuRewardGiven));
-        _skeletronRewardGiven = tag.GetBool(nameof(_skeletronRewardGiven));
+        if (tag.ContainsKey(nameof(_kingSlimeRewardUnlocked)))
+        {
+            _kingSlimeRewardUnlocked = tag.GetBool(nameof(_kingSlimeRewardUnlocked));
+        }
+
+        if (tag.ContainsKey(nameof(_kingSlimePendingCrystals)))
+        {
+            _kingSlimePendingCrystals = Math.Max(0, tag.GetInt(nameof(_kingSlimePendingCrystals)));
+        }
+
+        if (tag.ContainsKey(nameof(_eyeOfCthulhuRewardUnlocked)))
+        {
+            _eyeOfCthulhuRewardUnlocked = tag.GetBool(nameof(_eyeOfCthulhuRewardUnlocked));
+        }
+
+        if (tag.ContainsKey(nameof(_eyeOfCthulhuPendingCrystals)))
+        {
+            _eyeOfCthulhuPendingCrystals = Math.Max(0, tag.GetInt(nameof(_eyeOfCthulhuPendingCrystals)));
+        }
+
+        if (tag.ContainsKey(nameof(_eaterOfWorldsRewardUnlocked)))
+        {
+            _eaterOfWorldsRewardUnlocked = tag.GetBool(nameof(_eaterOfWorldsRewardUnlocked));
+        }
+
+        if (tag.ContainsKey(nameof(_eaterOfWorldsPendingCrystals)))
+        {
+            _eaterOfWorldsPendingCrystals = Math.Max(0, tag.GetInt(nameof(_eaterOfWorldsPendingCrystals)));
+        }
+
+        if (tag.ContainsKey(nameof(_brainOfCthulhuRewardUnlocked)))
+        {
+            _brainOfCthulhuRewardUnlocked = tag.GetBool(nameof(_brainOfCthulhuRewardUnlocked));
+        }
+
+        if (tag.ContainsKey(nameof(_brainOfCthulhuPendingCrystals)))
+        {
+            _brainOfCthulhuPendingCrystals = Math.Max(0, tag.GetInt(nameof(_brainOfCthulhuPendingCrystals)));
+        }
+
+        if (tag.ContainsKey(nameof(_skeletronRewardUnlocked)))
+        {
+            _skeletronRewardUnlocked = tag.GetBool(nameof(_skeletronRewardUnlocked));
+        }
+
+        if (tag.ContainsKey(nameof(_skeletronPendingCrystals)))
+        {
+            _skeletronPendingCrystals = Math.Max(0, tag.GetInt(nameof(_skeletronPendingCrystals)));
+        }
     }
 
     public override void SaveWorldData(TagCompound tag)
     {
-        tag[nameof(_kingSlimeRewardGiven)] = _kingSlimeRewardGiven;
-        tag[nameof(_eyeOfCthulhuRewardGiven)] = _eyeOfCthulhuRewardGiven;
-        tag[nameof(_eaterOfWorldsRewardGiven)] = _eaterOfWorldsRewardGiven;
-        tag[nameof(_brainOfCthulhuRewardGiven)] = _brainOfCthulhuRewardGiven;
-        tag[nameof(_skeletronRewardGiven)] = _skeletronRewardGiven;
+        tag[nameof(_kingSlimeRewardUnlocked)] = _kingSlimeRewardUnlocked;
+        tag[nameof(_kingSlimePendingCrystals)] = _kingSlimePendingCrystals;
+
+        tag[nameof(_eyeOfCthulhuRewardUnlocked)] = _eyeOfCthulhuRewardUnlocked;
+        tag[nameof(_eyeOfCthulhuPendingCrystals)] = _eyeOfCthulhuPendingCrystals;
+
+        tag[nameof(_eaterOfWorldsRewardUnlocked)] = _eaterOfWorldsRewardUnlocked;
+        tag[nameof(_eaterOfWorldsPendingCrystals)] = _eaterOfWorldsPendingCrystals;
+
+        tag[nameof(_brainOfCthulhuRewardUnlocked)] = _brainOfCthulhuRewardUnlocked;
+        tag[nameof(_brainOfCthulhuPendingCrystals)] = _brainOfCthulhuPendingCrystals;
+
+        tag[nameof(_skeletronRewardUnlocked)] = _skeletronRewardUnlocked;
+        tag[nameof(_skeletronPendingCrystals)] = _skeletronPendingCrystals;
     }
 
     public override void PostWorldGen()
@@ -63,11 +138,11 @@ internal sealed class LifeCrystalSystem : ModSystem
 
         var config = ProgressionReforgedConfig.Instance;
 
-        TryGrantBossReward(ref _kingSlimeRewardGiven, NPC.downedSlimeKing, config.KingSlimeLifeCrystals);
-        TryGrantBossReward(ref _eyeOfCthulhuRewardGiven, NPC.downedBoss1, config.EyeOfCthulhuLifeCrystals);
-        TryGrantBossReward(ref _eaterOfWorldsRewardGiven, NPC.downedBoss2 && WorldGen.crimson != true, config.EaterOfWorldsLifeCrystals);
-        TryGrantBossReward(ref _brainOfCthulhuRewardGiven, NPC.downedBoss2 && WorldGen.crimson, config.BrainOfCthulhuLifeCrystals);
-        TryGrantBossReward(ref _skeletronRewardGiven, NPC.downedBoss3, config.SkeletronLifeCrystals);
+        ProcessBossReward(ref _kingSlimeRewardUnlocked, ref _kingSlimePendingCrystals, NPC.downedSlimeKing, config.KingSlimeLifeCrystals);
+        ProcessBossReward(ref _eyeOfCthulhuRewardUnlocked, ref _eyeOfCthulhuPendingCrystals, NPC.downedBoss1, config.EyeOfCthulhuLifeCrystals);
+        ProcessBossReward(ref _eaterOfWorldsRewardUnlocked, ref _eaterOfWorldsPendingCrystals, NPC.downedBoss2 && !WorldGen.crimson, config.EaterOfWorldsLifeCrystals);
+        ProcessBossReward(ref _brainOfCthulhuRewardUnlocked, ref _brainOfCthulhuPendingCrystals, NPC.downedBoss2 && WorldGen.crimson, config.BrainOfCthulhuLifeCrystals);
+        ProcessBossReward(ref _skeletronRewardUnlocked, ref _skeletronPendingCrystals, NPC.downedBoss3, config.SkeletronLifeCrystals);
     }
 
     public static int CountLifeCrystals()
@@ -149,24 +224,33 @@ internal sealed class LifeCrystalSystem : ModSystem
         NetMessage.SendTileSquare(-1, topLeft.X + 1, topLeft.Y + 1, 2);
     }
 
-    private void TryGrantBossReward(ref bool flag, bool conditionMet, int amount)
+    private void ProcessBossReward(ref bool unlocked, ref int pendingCrystals, bool conditionMet, int configuredAmount)
     {
-        if (flag || !conditionMet || amount <= 0)
+        if (conditionMet && !unlocked)
+        {
+            unlocked = true;
+            pendingCrystals += Math.Max(0, configuredAmount);
+        }
+
+        if (pendingCrystals <= 0)
         {
             return;
         }
 
-        int placed = SpawnLifeCrystals(amount);
+        int attemptCount = Math.Min(pendingCrystals, 5);
+        int placed = SpawnLifeCrystals(attemptCount);
+
         if (placed > 0)
         {
-            flag = true;
+            pendingCrystals -= placed;
+            AnnounceLifeCrystalsSpawned(placed);
         }
     }
 
     private int SpawnLifeCrystals(int amount)
     {
         int placed = 0;
-        var attemptsPerCrystal = 3000;
+        const int attemptsPerCrystal = 3000;
         for (int i = 0; i < amount; i++)
         {
             if (TryPlaceLifeCrystal(attemptsPerCrystal))
@@ -199,6 +283,11 @@ internal sealed class LifeCrystalSystem : ModSystem
 
             if (WorldGen.PlaceTile(x, y, TileID.Heart, mute: true, forced: true))
             {
+                WorldGen.SquareTileFrame(x, y, resetFrame: true);
+                WorldGen.SquareTileFrame(x + 1, y, resetFrame: true);
+                WorldGen.SquareTileFrame(x, y + 1, resetFrame: true);
+                WorldGen.SquareTileFrame(x + 1, y + 1, resetFrame: true);
+
                 NetMessage.SendTileSquare(-1, x + 1, y + 1, 2);
                 return true;
             }
@@ -219,23 +308,52 @@ internal sealed class LifeCrystalSystem : ModSystem
             for (int j = 0; j < 2; j++)
             {
                 Tile tile = Framing.GetTileSafely(x + i, y + j);
-                if (tile.HasTile)
+                if (tile.HasTile || tile.LiquidAmount > 0 || tile.IsActuated)
                 {
                     return false;
                 }
             }
         }
 
-        for (int i = -1; i <= 2; i++)
+        Tile belowLeft = Framing.GetTileSafely(x, y + 2);
+        Tile belowRight = Framing.GetTileSafely(x + 1, y + 2);
+
+        return IsSupportingTile(belowLeft) && IsSupportingTile(belowRight);
+    }
+
+    private static bool IsSupportingTile(Tile tile)
+    {
+        if (!tile.HasTile || tile.IsActuated)
         {
-            Tile below = Framing.GetTileSafely(x + i, y + 2);
-            if (below.HasTile && Main.tileSolid[below.TileType])
-            {
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        if (!Main.tileSolid[tile.TileType])
+        {
+            return false;
+        }
+
+        return tile.Slope == SlopeType.Solid;
+    }
+
+    private static void AnnounceLifeCrystalsSpawned(int amount)
+    {
+        if (amount <= 0)
+        {
+            return;
+        }
+
+        string message = Language.GetTextValue("Mods.ProgressionReforged.LifeCrystals.BossReward", amount);
+        Color color = new(255, 240, 20);
+
+        if (Main.netMode == NetmodeID.Server)
+        {
+            ChatHelper.BroadcastChatMessage(NetworkText.FromLiteral(message), color);
+        }
+        else
+        {
+            Main.NewText(message, color.R, color.G, color.B);
+        }
     }
 
     public static int GetLifeCrystalCostForNextHeart(Player player)
